@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Login" };
 
 export default function LoginPage() {
   return (
-    <AuthLayout>
+    <AuthLayout title="Selamat datang" subtitle="Masuk dengan akun Anda untuk melanjutkan.">
       <LoginForm />
     </AuthLayout>
   );

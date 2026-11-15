@@ -1,4 +1,6 @@
 export const APP_NAME = "Cendana Motor";
+export const APP_TAGLINE = "Bengkel servis & spare part motor terpercaya.";
+export const APP_DESCRIPTION = "Kelola order servis, stok sparepart, dan pembayaran dalam satu tempat.";
 export const APP_TIMEZONE = "Asia/Jakarta";
 export const APP_LOCALE = "id-ID";
 export const CURRENCY = "IDR";
