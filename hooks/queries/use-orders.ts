@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { queryKeys } from "@/constants/query-keys";
 import { AppRoute } from "@/constants/routes";
 import type {

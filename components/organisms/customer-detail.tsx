@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Select, Space } from "antd";
 import { ConfirmButton } from "@/components/molecules/confirm-button";

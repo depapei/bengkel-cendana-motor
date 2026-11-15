@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { AuditOutlined, EditOutlined, ImportOutlined } from "@ant-design/icons";
 import { Button, Card, Descriptions, Space } from "antd";
 import { Money } from "@/components/atoms/money";

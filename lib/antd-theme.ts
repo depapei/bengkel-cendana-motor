@@ -1,6 +1,6 @@
 import type { ThemeConfig } from "antd";
 
-const BRAND_COLOR = "#D3241C";
+export const BRAND_COLOR = "#D3241C";
 export const SIDEBAR_BG = "#1c1917";
 
 /** Satu-satunya tempat mengatur tema Ant Design. */

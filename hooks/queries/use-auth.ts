@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import { queryKeys } from "@/constants/query-keys";
 import { AppRoute } from "@/constants/routes";
 import { UserRole } from "@/constants/user-role";
