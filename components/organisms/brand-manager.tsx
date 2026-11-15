@@ -48,7 +48,7 @@ export function BrandManager() {
         ]}
       />
       </TableCard>
-      {modal.open && <BrandFormModal record={modal.record} onClose={modal.close} />}
+      {modal.render(<BrandFormModal record={modal.record} onClose={modal.close} />)}
     </>
   );
 }

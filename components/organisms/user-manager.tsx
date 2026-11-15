@@ -62,7 +62,7 @@ export function UserManager() {
         ]}
       />
       </TableCard>
-      {modal.open && <UserFormModal record={modal.record} onClose={modal.close} />}
+      {modal.render(<UserFormModal record={modal.record} onClose={modal.close} />)}
     </>
   );
 }

@@ -76,10 +76,10 @@ function SparePartDetailView({ part }: { part: SparePart }) {
         </Card>
       </Space>
 
-      {editModal.open && <SparePartFormModal record={part} onClose={editModal.close} />}
-      {movementModal.open && movementModal.record && (
+      {editModal.render(<SparePartFormModal record={part} onClose={editModal.close} />)}
+      {movementModal.render(movementModal.record && (
         <StockMovementFormModal part={part} type={movementModal.record} onClose={movementModal.close} />
-      )}
+      ))}
     </>
   );
 }

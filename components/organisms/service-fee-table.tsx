@@ -89,7 +89,7 @@ export function ServiceFeeTable({ order }: { order: OrderDetail }) {
           </Table.Summary.Row>
         )}
       />
-      {modal.open && <ServiceFeeFormModal order={order} record={modal.record} onClose={modal.close} />}
+      {modal.render(<ServiceFeeFormModal order={order} record={modal.record} onClose={modal.close} />)}
     </Card>
   );
 }

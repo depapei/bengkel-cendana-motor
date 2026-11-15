@@ -91,8 +91,8 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
         </Card>
       </Space>
 
-      {customerModal.open && <CustomerFormModal record={customer} onClose={customerModal.close} />}
-      {vehicleModal.open && (
+      {customerModal.render(<CustomerFormModal record={customer} onClose={customerModal.close} />)}
+      {vehicleModal.render(
         <VehicleFormModal customerId={customer.id} record={vehicleModal.record} onClose={vehicleModal.close} />
       )}
     </>

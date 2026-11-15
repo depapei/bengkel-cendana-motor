@@ -57,7 +57,7 @@ export function OrderStatusActions({ order, shortageCount }: OrderStatusActionsP
           </Tooltip>
         );
       })}
-      {cancelModal.open && <CancelOrderModal order={order} onClose={cancelModal.close} />}
+      {cancelModal.render(<CancelOrderModal order={order} onClose={cancelModal.close} />)}
     </>
   );
 }

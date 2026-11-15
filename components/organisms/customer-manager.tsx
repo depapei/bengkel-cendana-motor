@@ -69,7 +69,7 @@ export function CustomerManager() {
         ]}
       />
       </TableCard>
-      {modal.open && <CustomerFormModal withVehicle onClose={modal.close} />}
+      {modal.render(<CustomerFormModal withVehicle onClose={modal.close} />)}
     </>
   );
 }

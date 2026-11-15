@@ -61,7 +61,7 @@ export function SparePartManager() {
         ]}
       />
       </TableCard>
-      {modal.open && <SparePartFormModal record={modal.record} onClose={modal.close} />}
+      {modal.render(<SparePartFormModal record={modal.record} onClose={modal.close} />)}
     </>
   );
 }
