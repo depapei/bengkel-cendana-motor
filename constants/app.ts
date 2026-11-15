@@ -20,4 +20,7 @@ export const LOW_STOCK_LIMIT = 10;
 export const WHATSAPP_BASE_URL = "https://wa.me";
 
 export const DATE_FORMAT = "DD MMM YYYY";
+/** Format tanggal tanpa jam untuk dikirim ke API (kolom @db.Date). */
+export const DATE_ONLY_FORMAT = "YYYY-MM-DD";
+export const MILEAGE_UNIT = "km";
 export const DATE_TIME_FORMAT = "DD MMM YYYY HH:mm";

@@ -12,8 +12,8 @@ import { AppRoute } from "@/constants/routes";
 import { useOrder } from "@/hooks/queries/use-orders";
 import { useModalState } from "@/hooks/use-modal-state";
 import type { OrderDetail as OrderDetailData } from "@/types/order";
-import { formatDateTime } from "@/utils/format";
-import { getStockShortages } from "@/utils/order";
+import { formatDateTime, formatMileage } from "@/utils/format";
+import { formatNextService, getStockShortages } from "@/utils/order";
 import { buildUrl } from "@/utils/url";
 import { OrderEditModal } from "./order-edit-modal";
 import { OrderStatusActions } from "./order-status-actions";
@@ -76,7 +76,7 @@ function OrderDetailView({ order }: { order: OrderDetailData }) {
           extra={
             editable && (
               <Button icon={<EditOutlined />} onClick={() => editModal.show()}>
-                Ubah Keluhan
+                Ubah Detail
               </Button>
             )
           }
@@ -96,8 +96,12 @@ function OrderDetailView({ order }: { order: OrderDetailData }) {
                 label: "Kendaraan",
                 children: `${order.customerVehicle.platNomor} · ${order.customerVehicle.brand.name} ${order.customerVehicle.brand.type}`,
               },
+              { label: "Kilometer", children: formatMileage(order.mileage) },
+              { label: "Mekanik", children: order.mechanic?.name ?? "Belum ditugaskan" },
               { label: "Keluhan", children: order.complaint, span: 2 },
-              { label: "Catatan", children: order.notes ?? "-", span: 2 },
+              { label: "Catatan mekanik", children: order.mechanicNote ?? "-", span: 2 },
+              { label: "Catatan bengkel", children: order.notes ?? "-", span: 2 },
+              { label: "Service selanjutnya", children: formatNextService(order), span: 2 },
               { label: "Draft", children: formatDateTime(order.draftAt) },
               { label: "Booked", children: formatDateTime(order.bookedAt) },
               { label: "Mulai dikerjakan", children: formatDateTime(order.progressAt) },
@@ -116,8 +120,8 @@ function OrderDetailView({ order }: { order: OrderDetailData }) {
         <ServiceFeeTable order={order} />
       </Flex>
 
-      {editModal.open && <OrderEditModal order={order} onClose={editModal.close} />}
-      {paymentModal.open && <PaymentModal order={order} onClose={paymentModal.close} />}
+      {editModal.render(<OrderEditModal order={order} onClose={editModal.close} />)}
+      {paymentModal.render(<PaymentModal order={order} onClose={paymentModal.close} />)}
     </>
   );
 }

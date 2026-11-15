@@ -1,7 +1,8 @@
 import { APP_NAME, WHATSAPP_BASE_URL } from "@/constants/app";
 import { PAYMENT_METHOD_META, PAYMENT_STATUS_META } from "@/constants/payment";
 import type { OrderDetail } from "@/types/order";
-import { formatDateTime, formatRupiah } from "./format";
+import { formatDateTime, formatMileage, formatRupiah } from "./format";
+import { formatNextService } from "./order";
 import { toInternationalPhone } from "./normalize";
 
 export function buildInvoiceMessage(order: OrderDetail): string {
@@ -15,11 +16,13 @@ export function buildInvoiceMessage(order: OrderDetail): string {
     `No: ${order.orderNo}`,
     `Tanggal: ${formatDateTime(order.createdAt)}`,
     `Kendaraan: ${order.customerVehicle.platNomor} (${order.customerVehicle.brand.name} ${order.customerVehicle.brand.type})`,
+    `Kilometer: ${formatMileage(order.mileage)}`,
     "",
     ...items,
     "",
     `*Total: ${formatRupiah(order.totalPrice)}*`,
     `Status bayar: ${payment}`,
+    ...(order.nextServiceDate || order.nextServiceNote ? ["", `Service selanjutnya: ${formatNextService(order)}`] : []),
     "",
     "Terima kasih",
   ].join("\n");

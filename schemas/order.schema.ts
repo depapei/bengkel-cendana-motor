@@ -1,16 +1,34 @@
 import { z } from "zod";
+import { MESSAGE } from "@/constants/messages";
 import { OrderStatus } from "@/constants/order-status";
 import { PaymentMethod } from "@/constants/payment";
-import { idSchema, money, optionalString, positiveInt, requiredString } from "./common";
+import { idSchema, money, nonNegativeInt, optionalDate, optionalString, positiveInt, requiredString } from "./common";
 
-export const orderSchema = z.object({
+const orderBaseSchema = z.object({
   complaint: requiredString("Keluhan"),
   notes: optionalString(),
+  mileage: nonNegativeInt("Kilometer motor"),
+  mechanicId: optionalString(),
+  /** Catatan internal mekanik — hanya boleh diisi bila mekanik sudah ditugaskan. */
+  mechanicNote: optionalString(),
+  /** Rekomendasi service selanjutnya. */
+  nextServiceDate: optionalDate(),
+  nextServiceNote: optionalString(),
 });
 
-export const orderCreateSchema = orderSchema.extend({
-  customerVehicleId: idSchema("Kendaraan"),
-});
+const withMechanicNoteRule = <T extends z.ZodType<{ mechanicId: string | null; mechanicNote: string | null }>>(schema: T) =>
+  schema.refine((value) => !value.mechanicNote || !!value.mechanicId, {
+    path: ["mechanicNote"],
+    message: MESSAGE.mechanicRequired,
+  });
+
+export const orderSchema = withMechanicNoteRule(orderBaseSchema);
+
+export const orderCreateSchema = withMechanicNoteRule(
+  orderBaseSchema.extend({
+    customerVehicleId: idSchema("Kendaraan"),
+  }),
+);
 
 /** sparepartId kosong = jasa saja. */
 export const serviceFeeSchema = z.object({

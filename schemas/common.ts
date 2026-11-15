@@ -26,8 +26,19 @@ export const platNomor = () =>
     .transform(normalizePlat)
     .refine((value) => /^[A-Z]{1,2} \d{1,4}( [A-Z]{1,3})?$/.test(value), "Plat nomor tidak valid (contoh: B 1234 ABC)");
 
-export const money = (label: string) =>
+export const nonNegativeInt = (label: string) =>
   z.number({ error: MESSAGE.required(label) }).int().min(0, `${label} tidak boleh negatif`);
+
+export const money = nonNegativeInt;
+
+/** Tanggal tanpa jam (`YYYY-MM-DD`), opsional. Kosong → null. */
+export const optionalDate = () =>
+  z
+    .string()
+    .trim()
+    .nullish()
+    .transform((value) => value || null)
+    .refine((value) => value === null || /^\d{4}-\d{2}-\d{2}$/.test(value), "Format tanggal tidak valid");
 
 export const positiveInt = (label: string) =>
   z.number({ error: MESSAGE.required(label) }).int().min(1, `${label} minimal 1`);

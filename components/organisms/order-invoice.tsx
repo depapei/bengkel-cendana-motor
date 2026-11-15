@@ -11,7 +11,8 @@ import { PAYMENT_METHOD_META, PAYMENT_STATUS_META } from "@/constants/payment";
 import { AppRoute } from "@/constants/routes";
 import { useOrder } from "@/hooks/queries/use-orders";
 import type { OrderDetail, ServiceFee } from "@/types/order";
-import { formatDateTime } from "@/utils/format";
+import { formatDateTime, formatMileage } from "@/utils/format";
+import { formatNextService } from "@/utils/order";
 import { buildUrl } from "@/utils/url";
 import { buildInvoiceMessage, buildWhatsAppLink } from "@/utils/whatsapp";
 
@@ -63,7 +64,12 @@ function InvoiceView({ order }: { order: OrderDetail }) {
           { label: "No. HP", children: order.customer.phoneNumber },
           { label: "Plat", children: order.customerVehicle.platNomor },
           { label: "Motor", children: `${order.customerVehicle.brand.name} ${order.customerVehicle.brand.type}` },
+          { label: "Kilometer", children: formatMileage(order.mileage) },
+          { label: "Mekanik", children: order.mechanic?.name ?? "-" },
           { label: "Keluhan", children: order.complaint, span: 2 },
+          ...(order.nextServiceDate || order.nextServiceNote
+            ? [{ label: "Service selanjutnya", children: formatNextService(order), span: 2 }]
+            : []),
         ]}
       />
 

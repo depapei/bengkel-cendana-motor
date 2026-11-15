@@ -1,7 +1,7 @@
 import type { OrderStatus } from "@/constants/order-status";
 import type { PaymentMethod, PaymentStatus } from "@/constants/payment";
 import type { ListParams, Timestamps } from "./common";
-import type { Customer, SparePart, Vehicle } from "./models";
+import type { Customer, Mechanic, SparePart, Vehicle } from "./models";
 
 export interface ServiceFee extends Timestamps {
   id: string;
@@ -20,8 +20,13 @@ export interface Order extends Timestamps {
   orderNo: string;
   customerId: string;
   customerVehicleId: string;
+  mechanicId: string | null;
   complaint: string;
   notes: string | null;
+  mileage: number | null;
+  mechanicNote: string | null;
+  nextServiceDate: string | null;
+  nextServiceNote: string | null;
   totalPrice: number;
   status: OrderStatus;
   cancelReason: string | null;
@@ -35,6 +40,7 @@ export interface Order extends Timestamps {
   paidAt: string | null;
   customer: Pick<Customer, "id" | "name" | "phoneNumber">;
   customerVehicle: Pick<Vehicle, "id" | "platNomor" | "brand">;
+  mechanic: Pick<Mechanic, "id" | "name"> | null;
 }
 
 export interface OrderDetail extends Order {

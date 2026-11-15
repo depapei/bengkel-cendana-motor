@@ -17,6 +17,11 @@ export interface Brand extends Timestamps {
   type: string;
 }
 
+export interface Mechanic extends Timestamps {
+  id: string;
+  name: string;
+}
+
 export interface Vehicle extends Timestamps {
   id: string;
   customerId: string;

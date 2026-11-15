@@ -12,6 +12,7 @@ export const MESSAGE = {
   serverError: "Terjadi kesalahan pada server",
   invalidLogin: "Username atau password salah",
   required: (label: string) => `${label} wajib diisi`,
+  mechanicRequired: "Tugaskan mekanik terlebih dahulu",
 } as const;
 
 /** Nama kolom unik → label untuk pesan duplikat. */

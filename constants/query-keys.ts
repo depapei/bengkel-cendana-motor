@@ -14,6 +14,9 @@ export const queryKeys = {
   brands: {
     all: ["brands"] as const,
   },
+  mechanics: {
+    all: ["mechanics"] as const,
+  },
   spareParts: {
     all: ["spare-parts"] as const,
     list: (params?: ListParams) => [...queryKeys.spareParts.all, "list", params] as const,

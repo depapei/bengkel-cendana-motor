@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FormProvider } from "react-hook-form";
 import { PlusOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Button, Card, Empty, Flex, Input, List, Radio, Typography } from "antd";
 import { FormContainer } from "@/components/molecules/form-container";
@@ -14,6 +15,7 @@ import { useZodForm } from "@/hooks/use-zod-form";
 import { orderCreateSchema } from "@/schemas/order.schema";
 import type { Customer, Vehicle } from "@/types/models";
 import { CustomerFormModal } from "./customer-form-modal";
+import { OrderFields } from "./order-fields";
 import { VehicleFormModal } from "./vehicle-form-modal";
 
 const SEARCH_RESULT_LIMIT = 10;
@@ -27,11 +29,17 @@ export function OrderCreateForm() {
   const vehicleModal = useModalState<Customer>();
   const create = useCreateOrder();
 
-  const { control, handleSubmit, setValue, watch } = useZodForm(orderCreateSchema, {
+  const form = useZodForm(orderCreateSchema, {
     customerVehicleId: "",
     complaint: "",
     notes: "",
+    mileage: undefined,
+    mechanicId: null,
+    mechanicNote: null,
+    nextServiceDate: null,
+    nextServiceNote: null,
   });
+  const { control, handleSubmit, setValue, watch } = form;
   const vehicleId = watch("customerVehicleId");
   const selectedVehicle = selectedCustomer?.vehicles.find((vehicle) => vehicle.id === vehicleId);
 
@@ -98,49 +106,39 @@ export function OrderCreateForm() {
           />
         </Card>
 
-        <Card title="2. Keluhan">
-          <FormContainer onSubmit={handleSubmit((values) => create.mutate(values))}>
-            <FormField
-              control={control}
-              name="customerVehicleId"
-              label="Kendaraan terpilih"
-              required
-              render={() => (
-                <Input
-                  readOnly
-                  placeholder="Pilih kendaraan di atas"
-                  value={
-                    selectedCustomer && selectedVehicle
-                      ? `${selectedCustomer.name} — ${selectedVehicle.platNomor} (${selectedVehicle.brand.name} ${selectedVehicle.brand.type})`
-                      : ""
-                  }
-                />
-              )}
-            />
-            <FormField
-              control={control}
-              name="complaint"
-              label="Keluhan customer"
-              required
-              render={(field) => <Input.TextArea {...field} rows={3} placeholder="Contoh: rem depan bunyi, tarikan berat" />}
-            />
-            <FormField
-              control={control}
-              name="notes"
-              label="Catatan bengkel"
-              render={(field) => <Input.TextArea {...field} value={field.value ?? ""} rows={2} />}
-            />
-            <Button type="primary" htmlType="submit" loading={create.isPending}>
-              Buat Order (Draft)
-            </Button>
-          </FormContainer>
+        <Card title="2. Detail Service">
+          <FormProvider {...form}>
+            <FormContainer onSubmit={handleSubmit((values) => create.mutate(values))}>
+              <FormField
+                control={control}
+                name="customerVehicleId"
+                label="Kendaraan terpilih"
+                required
+                render={() => (
+                  <Input
+                    readOnly
+                    placeholder="Pilih kendaraan di atas"
+                    value={
+                      selectedCustomer && selectedVehicle
+                        ? `${selectedCustomer.name} — ${selectedVehicle.platNomor} (${selectedVehicle.brand.name} ${selectedVehicle.brand.type})`
+                        : ""
+                    }
+                  />
+                )}
+              />
+              <OrderFields />
+              <Button type="primary" htmlType="submit" loading={create.isPending}>
+                Buat Order (Draft)
+              </Button>
+            </FormContainer>
+          </FormProvider>
         </Card>
       </Flex>
 
-      {customerModal.open && (
+      {customerModal.render(
         <CustomerFormModal withVehicle onClose={customerModal.close} onSaved={(customer) => selectVehicle(customer, customer.vehicles[0])} />
       )}
-      {vehicleModal.open && vehicleModal.record && (
+      {vehicleModal.render(vehicleModal.record && (
         <VehicleFormModal
           customerId={vehicleModal.record.id}
           onClose={vehicleModal.close}
@@ -149,7 +147,7 @@ export function OrderCreateForm() {
             selectVehicle({ ...customer, vehicles: [...customer.vehicles, vehicle] }, vehicle);
           }}
         />
-      )}
+      ))}
     </>
   );
 }

@@ -30,6 +30,7 @@ import { db, type Tx } from "../db";
 import { badRequest, notFound } from "../http/errors";
 import { toPaginated, toSkipTake } from "../pagination";
 import { getVehicle } from "./customer.service";
+import { assertMechanic } from "./mechanic.service";
 import { applyStockDelta, returnStock, takeStock } from "./stock.service";
 
 const ENTITY = "Order";
@@ -38,6 +39,7 @@ const ORDER_NO_RETRY = 3;
 const ORDER_INCLUDE = {
   customer: { select: { id: true, name: true, phoneNumber: true } },
   customerVehicle: { select: { id: true, platNomor: true, brand: true } },
+  mechanic: { select: { id: true, name: true } },
 } satisfies Prisma.OrderInclude;
 
 const ORDER_DETAIL_INCLUDE = {
@@ -104,6 +106,11 @@ export async function getOrder(id: string) {
 
 // ---------------------------------------------------------------- order
 
+/** Input form → kolom Prisma (tanggal `YYYY-MM-DD` → Date untuk kolom @db.Date). */
+function toOrderColumns({ nextServiceDate, ...data }: OrderData) {
+  return { ...data, nextServiceDate: nextServiceDate ? new Date(nextServiceDate) : null };
+}
+
 async function nextOrderNo(tx: Tx) {
   const date = new Intl.DateTimeFormat("en-CA", { timeZone: APP_TIMEZONE }).format(new Date()).replaceAll("-", "");
   const prefix = `${ORDER_NO_PREFIX}-${date}-`;
@@ -118,12 +125,13 @@ async function nextOrderNo(tx: Tx) {
 
 export async function createOrder({ customerVehicleId, ...data }: OrderCreateData, userId: string) {
   const vehicle = await getVehicle(customerVehicleId);
+  await assertMechanic(db, data.mechanicId);
   for (let attempt = 1; ; attempt++) {
     try {
       const order = await db.$transaction(async (tx) =>
         tx.order.create({
           data: {
-            ...data,
+            ...toOrderColumns(data),
             orderNo: await nextOrderNo(tx),
             customerId: vehicle.customerId,
             customerVehicleId,
@@ -143,7 +151,8 @@ export async function updateOrder(id: string, data: OrderData, userId: string) {
   await db.$transaction(async (tx) => {
     const order = await lockOrder(tx, id);
     assertEditable(order);
-    await tx.order.update({ where: { id }, data: { ...data, ...auditUpdate(userId) } });
+    await assertMechanic(tx, data.mechanicId);
+    await tx.order.update({ where: { id }, data: { ...toOrderColumns(data), ...auditUpdate(userId) } });
   });
   return getOrder(id);
 }

@@ -1,7 +1,7 @@
 import "server-only";
 import { LOW_STOCK_LIMIT, LOW_STOCK_THRESHOLD } from "@/constants/app";
-import { OrderStatus } from "@/constants/order-status";
 import type { DashboardSummary } from "@/types/report";
+import { toStatusCounts } from "@/utils/order";
 import { notDeleted } from "../audit";
 import { db } from "../db";
 import { expireStaleDrafts } from "./order.service";
@@ -21,10 +21,5 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
     db.sparePart.count({ where: lowStockWhere }),
   ]);
 
-  const orderStatusCounts = Object.fromEntries(
-    Object.values(OrderStatus).map((status) => [status, 0]),
-  ) as DashboardSummary["orderStatusCounts"];
-  for (const group of statusGroups) orderStatusCounts[group.status] = group._count._all;
-
-  return { orderStatusCounts, lowStockParts, lowStockTotal };
+  return { orderStatusCounts: toStatusCounts(statusGroups), lowStockParts, lowStockTotal };
 }

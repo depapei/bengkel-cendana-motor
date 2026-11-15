@@ -1,10 +1,10 @@
 "use client";
 
 import { Tag, Typography } from "antd";
-import type { Vehicle } from "@/types/models";
+import type { Brand, Vehicle } from "@/types/models";
 
 interface VehicleLabelProps {
-  vehicle: Pick<Vehicle, "platNomor" | "brand">;
+  vehicle: Pick<Vehicle, "platNomor"> & { brand: Pick<Brand, "name" | "type"> };
   /** `tag`: satu baris dalam Tag. `stacked`: plat di atas, merek di bawah. */
   variant?: "tag" | "stacked";
 }
