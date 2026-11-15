@@ -13,7 +13,12 @@ export enum AppRoute {
   Brands = "/brands",
   Reports = "/reports",
   Users = "/users",
+  /** Papan antrean servis untuk customer (tanpa login). */
+  Queue = "/antrean",
 }
 
-/** Halaman yang boleh dibuka tanpa login. */
+/** Halaman khusus tamu: tanpa login, user yang sudah login diarahkan ke Home. */
 export const PUBLIC_ROUTES: string[] = [AppRoute.Login];
+
+/** Halaman terbuka: bisa dibuka dengan atau tanpa login. */
+export const OPEN_ROUTES: string[] = [AppRoute.Queue];

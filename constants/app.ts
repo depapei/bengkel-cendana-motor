@@ -11,6 +11,8 @@ export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12; // 12 jam
 export const DEFAULT_PAGE_SIZE = 12;
 export const MAX_PAGE_SIZE = 100;
 export const SEARCH_DEBOUNCE_MS = 400;
+/** Papan antrean customer di-refresh otomatis tiap interval ini. */
+export const QUEUE_REFRESH_INTERVAL_MS = 30_000;
 
 /** Sparepart dianggap stok menipis jika stok <= angka ini. */
 export const LOW_STOCK_THRESHOLD = 5;

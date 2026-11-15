@@ -34,6 +34,9 @@ export enum ApiEndpoint {
   ReportOrdersExport = "/reports/orders/export",
   ReportStockMovementsExport = "/reports/stock-movements/export",
 
+  Queue = "/queue",
+  QueueDetail = "/queue/:id",
+
   Users = "/users",
   UserDetail = "/users/:id",
 }

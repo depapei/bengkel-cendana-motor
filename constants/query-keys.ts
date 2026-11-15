@@ -29,6 +29,11 @@ export const queryKeys = {
     list: (params?: OrderListParams) => [...queryKeys.orders.all, "list", params] as const,
     detail: (id: string) => [...queryKeys.orders.all, "detail", id] as const,
   },
+  queue: {
+    all: ["queue"] as const,
+    list: (params?: ListParams) => [...queryKeys.queue.all, "list", params] as const,
+    detail: (id: string) => [...queryKeys.queue.all, "detail", id] as const,
+  },
   dashboard: {
     all: ["dashboard"] as const,
   },

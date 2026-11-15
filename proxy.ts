@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/constants/app";
-import { AppRoute, PUBLIC_ROUTES } from "@/constants/routes";
+import { AppRoute, OPEN_ROUTES, PUBLIC_ROUTES } from "@/constants/routes";
 import { verifySessionToken } from "@/lib/session-token";
 
 /**
@@ -9,6 +9,8 @@ import { verifySessionToken } from "@/lib/session-token";
  */
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  if (OPEN_ROUTES.includes(pathname)) return NextResponse.next();
+
   const isPublic = PUBLIC_ROUTES.includes(pathname);
   const userId = await verifySessionToken(req.cookies.get(SESSION_COOKIE)?.value);
 

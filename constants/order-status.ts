@@ -12,6 +12,23 @@ export const ORDER_STATUS_META: EnumMeta<OrderStatus> = {
   [OrderStatus.cancelled]: { label: "Dibatalkan", color: "red" },
 };
 
+/** Label status versi customer (papan antrean). Warna mengikuti ORDER_STATUS_META. */
+export const QUEUE_STATUS_META: EnumMeta<OrderStatus> = {
+  [OrderStatus.draft]: { label: "Menunggu Konfirmasi", color: ORDER_STATUS_META[OrderStatus.draft].color },
+  [OrderStatus.booked]: { label: "Dalam Antrean", color: ORDER_STATUS_META[OrderStatus.booked].color },
+  [OrderStatus.in_progress]: { label: "Sedang Dikerjakan", color: ORDER_STATUS_META[OrderStatus.in_progress].color },
+  [OrderStatus.done]: { label: "Selesai", color: ORDER_STATUS_META[OrderStatus.done].color },
+  [OrderStatus.cancelled]: { label: "Dibatalkan", color: ORDER_STATUS_META[OrderStatus.cancelled].color },
+};
+
+/** Urutan tahapan pengerjaan yang ditampilkan ke customer (tanpa `cancelled`). */
+export const QUEUE_PROGRESS_STEPS: readonly OrderStatus[] = [
+  OrderStatus.draft,
+  OrderStatus.booked,
+  OrderStatus.in_progress,
+  OrderStatus.done,
+];
+
 /** Aturan transisi (Spesifikasi §3). Status tidak bisa mundur. */
 export const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatus.draft]: [OrderStatus.booked, OrderStatus.cancelled],
