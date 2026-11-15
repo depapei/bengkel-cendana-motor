@@ -1,0 +1,18 @@
+import type { ThemeConfig } from "antd";
+
+const BRAND_COLOR = "#D3241C";
+export const SIDEBAR_BG = "#1c1917";
+
+/** Satu-satunya tempat mengatur tema Ant Design. */
+export const antdTheme: ThemeConfig = {
+  token: {
+    colorPrimary: BRAND_COLOR,
+    colorInfo: BRAND_COLOR,
+    borderRadius: 8,
+    fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+  },
+  components: {
+    Layout: { siderBg: SIDEBAR_BG, headerBg: "#ffffff", bodyBg: "#f5f5f4" },
+    Menu: { darkItemBg: SIDEBAR_BG, darkSubMenuItemBg: SIDEBAR_BG, darkItemSelectedBg: BRAND_COLOR },
+  },
+};

@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cendana Motor
 
-## Getting Started
+Sistem pencatatan order servis Bengkel Cendana Motor (MVP): customer & kendaraan, order servis (jasa / sparepart + jasa), stok sparepart, status order sampai selesai & dibayar, nota (cetak / WhatsApp).
 
-First, run the development server:
+Stack: Next.js 16 · Prisma 7 + PostgreSQL · Ant Design · TanStack Query · React Hook Form + Zod · Axios. Aturan codebase ada di [AGENTS.md](AGENTS.md).
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install                 # otomatis menjalankan `prisma generate`
+cp .env.example .env        # isi DATABASE_URL & AUTH_SECRET
+bun run db:migrate          # buat database + tabel
+bun run db:seed             # user default, merek motor, contoh sparepart
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Login default (dari seed):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Username | Password | Role |
+| --- | --- | --- |
+| `admin` | `admin123` | admin |
+| `kasir` | `kasir123` | kasir |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Ganti password setelah login pertama (menu **User**, khusus admin).
 
-## Learn More
+## Script
 
-To learn more about Next.js, take a look at the following resources:
+| Script | Fungsi |
+| --- | --- |
+| `bun run dev` | Server development |
+| `bun run build` / `start` | Build & jalankan produksi |
+| `bun run lint` | ESLint |
+| `bun run typecheck` | Generate route types + `tsc --noEmit` |
+| `bun run db:migrate` | Buat & apply migration dari `prisma/schema.prisma` |
+| `bun run db:deploy` | Apply migration di produksi |
+| `bun run db:seed` | Isi data awal |
+| `bun run db:studio` | Prisma Studio |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Aturan bisnis yang diterapkan
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Stok** hanya berkurang saat order `booked` (atau item ditambah ke order booked/in-progress) dan kembali saat batal / item dihapus. Draft tidak memengaruhi stok. Pengurangan atomik (`stock >= qty`) + CHECK constraint `stock >= 0`, dan setiap perubahan tercatat di `stock_movements`.
+- **Transisi status**: draft → booked → in-progress → done, batal dari draft/booked/in-progress (wajib alasan). Status tidak bisa mundur.
+- **Draft > 7 hari** otomatis dibatalkan (dicek saat daftar/detail order dibuka).
+- **Pembayaran** dicatat setelah `done`, lunas penuh (cash / transfer / QRIS).
+- **Harga sparepart** di item adalah snapshot saat input, harga jasa dipisah.

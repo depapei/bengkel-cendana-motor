@@ -1,0 +1,220 @@
+// Skema mengikuti "Spesifikasi MVP (Revisi)" — Cendana Motor.
+// Semua tabel punya kolom audit (createdAt/By, updatedAt/By, deletedAt/By).
+// Kolom *By menyimpan User.id (tanpa relasi Prisma agar model tidak dipenuhi back-relation).
+// Uang disimpan dalam Rupiah utuh (Int).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  admin
+  kasir
+}
+
+enum OrderStatus {
+  draft
+  booked
+  in_progress @map("in-progress")
+  done
+  cancelled
+}
+
+enum PaymentStatus {
+  unpaid
+  paid
+}
+
+enum PaymentMethod {
+  cash
+  transfer
+  qris
+}
+
+enum StockMovementType {
+  in
+  out
+  return
+  adjust
+}
+
+model User {
+  id           String   @id @default(uuid(7))
+  name         String
+  username     String   @unique
+  passwordHash String
+  role         UserRole
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@map("users")
+}
+
+model Customer {
+  id          String @id @default(uuid(7))
+  name        String
+  phoneNumber String @unique
+
+  vehicles CustomerVehicle[]
+  orders   Order[]
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@map("customers")
+}
+
+model BrandVehicle {
+  id   String @id @default(uuid(7))
+  name String
+  type String
+
+  vehicles CustomerVehicle[]
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@unique([name, type])
+  @@map("brand_vehicles")
+}
+
+model CustomerVehicle {
+  id         String @id @default(uuid(7))
+  customerId String
+  brandId    String
+  platNomor  String @unique
+
+  customer Customer     @relation(fields: [customerId], references: [id])
+  brand    BrandVehicle @relation(fields: [brandId], references: [id])
+  orders   Order[]
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@index([customerId])
+  @@map("customer_vehicles")
+}
+
+model SparePart {
+  id    String @id @default(uuid(7))
+  name  String
+  price Int
+  stock Int    @default(0) // CHECK (stock >= 0) ditambahkan di migration
+
+  serviceFees    ServiceFee[]
+  stockMovements StockMovement[]
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@map("spare_parts")
+}
+
+model Order {
+  id                String         @id @default(uuid(7))
+  orderNo           String         @unique
+  customerId        String
+  customerVehicleId String
+  complaint         String
+  notes             String?
+  totalPrice        Int            @default(0)
+  status            OrderStatus    @default(draft)
+  cancelReason      String?
+  paymentStatus     PaymentStatus  @default(unpaid)
+  paymentMethod     PaymentMethod?
+
+  draftAt     DateTime  @default(now()) @db.Timestamptz
+  bookedAt    DateTime? @db.Timestamptz
+  progressAt  DateTime? @db.Timestamptz
+  doneAt      DateTime? @db.Timestamptz
+  cancelledAt DateTime? @db.Timestamptz
+  paidAt      DateTime? @db.Timestamptz
+
+  customer        Customer        @relation(fields: [customerId], references: [id])
+  customerVehicle CustomerVehicle @relation(fields: [customerVehicleId], references: [id])
+  serviceFees     ServiceFee[]
+  stockMovements  StockMovement[]
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@index([status])
+  @@index([customerVehicleId])
+  @@map("orders")
+}
+
+model ServiceFee {
+  id             String  @id @default(uuid(7))
+  orderId        String
+  sparepartId    String?
+  name           String
+  qty            Int     @default(1)
+  sparepartPrice Int     @default(0)
+  laborPrice     Int     @default(0)
+  subtotal       Int     @default(0)
+
+  order     Order      @relation(fields: [orderId], references: [id])
+  sparePart SparePart? @relation(fields: [sparepartId], references: [id])
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@index([orderId])
+  @@map("service_fees")
+}
+
+model StockMovement {
+  id          String            @id @default(uuid(7))
+  sparepartId String
+  type        StockMovementType
+  qty         Int // positif = masuk, negatif = keluar
+  orderId     String?
+  note        String?
+
+  sparePart SparePart @relation(fields: [sparepartId], references: [id])
+  order     Order?    @relation(fields: [orderId], references: [id])
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@index([sparepartId])
+  @@map("stock_movements")
+}
