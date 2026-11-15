@@ -2,7 +2,7 @@ import { z } from "zod";
 import { UserRole } from "@/constants/user-role";
 import { requiredString } from "./common";
 
-const PASSWORD_MIN = 6;
+export const PASSWORD_MIN = 6;
 const passwordRule = z.string().min(PASSWORD_MIN, `Password minimal ${PASSWORD_MIN} karakter`);
 
 const userBaseSchema = z.object({

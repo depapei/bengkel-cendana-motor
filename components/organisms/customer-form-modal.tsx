@@ -36,7 +36,7 @@ export function CustomerFormModal({ record, withVehicle, onClose, onSaved }: Cus
       onCancel={onClose}
       loading={save.isPending}
     >
-      <FormField control={control} name="name" label="Nama" required render={(field) => <Input {...field} />} />
+      <FormField control={control} name="name" label="Nama" required render={(field) => <Input {...field} placeholder="Nama lengkap customer" />} />
       <FormField
         control={control}
         name="phoneNumber"

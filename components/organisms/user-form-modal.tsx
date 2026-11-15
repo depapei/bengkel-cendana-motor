@@ -7,7 +7,7 @@ import { FormModal } from "@/components/molecules/form-modal";
 import { USER_ROLE_META, UserRole } from "@/constants/user-role";
 import { useSaveUser } from "@/hooks/queries/use-users";
 import { useZodForm } from "@/hooks/use-zod-form";
-import { userCreateSchema, userUpdateSchema } from "@/schemas/user.schema";
+import { PASSWORD_MIN, userCreateSchema, userUpdateSchema } from "@/schemas/user.schema";
 import type { User } from "@/types/models";
 
 interface UserFormModalProps {
@@ -31,14 +31,14 @@ export function UserFormModal({ record, onClose }: UserFormModalProps) {
       onCancel={onClose}
       loading={save.isPending}
     >
-      <FormField control={control} name="name" label="Nama" required render={(field) => <Input {...field} />} />
-      <FormField control={control} name="username" label="Username" required render={(field) => <Input {...field} />} />
+      <FormField control={control} name="name" label="Nama" required render={(field) => <Input {...field} placeholder="Nama lengkap" />} />
+      <FormField control={control} name="username" label="Username" required render={(field) => <Input {...field} placeholder="Username untuk login" />} />
       <FormField
         control={control}
         name="role"
         label="Role"
         required
-        render={(field) => <EnumSelect {...field} meta={USER_ROLE_META} />}
+        render={(field) => <EnumSelect {...field} meta={USER_ROLE_META} placeholder="Pilih role" />}
       />
       <FormField
         control={control}
@@ -46,7 +46,7 @@ export function UserFormModal({ record, onClose }: UserFormModalProps) {
         label="Password"
         required={!record}
         extra={record ? "Kosongkan jika tidak diubah" : undefined}
-        render={(field) => <Input.Password {...field} value={field.value ?? ""} autoComplete="new-password" />}
+        render={(field) => <Input.Password {...field} value={field.value ?? ""} placeholder={record ? "Password baru" : `Minimal ${PASSWORD_MIN} karakter`} autoComplete="new-password" />}
       />
     </FormModal>
   );

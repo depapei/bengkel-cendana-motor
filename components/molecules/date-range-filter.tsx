@@ -37,6 +37,7 @@ export function DateRangeFilter({ value, onChange }: DateRangeFilterProps) {
       allowClear={false}
       format={DATE_FORMAT}
       presets={PRESETS}
+      placeholder={["Tanggal awal", "Tanggal akhir"]}
       value={[dayjs(value.from), dayjs(value.to)]}
       onChange={(range) => {
         if (range?.[0] && range[1]) onChange(toDateRange([range[0], range[1]]));

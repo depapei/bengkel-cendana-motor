@@ -68,15 +68,15 @@ export function ServiceFeeFormModal({ order, record, onClose }: ServiceFeeFormMo
           />
         )}
       />
-      <FormField control={control} name="name" label="Nama pekerjaan / item" required render={(field) => <Input {...field} />} />
       <FormField
         control={control}
         name="qty"
-        label="Qty"
+        label="Jumlah Sparepart"
         required
-        render={(field) => <InputNumber {...field} min={1} className="w-full" />}
+        render={(field) => <InputNumber {...field} min={1} placeholder="Jumlah" className="w-full" />}
       />
-      <FormField control={control} name="laborPrice" label="Harga jasa" required render={(field) => <MoneyInput {...field} />} />
+      <FormField control={control} name="name" label="Nama pekerjaan / item" required render={(field) => <Input {...field} placeholder="Contoh: ganti oli mesin" />} />
+      <FormField control={control} name="laborPrice" label="Harga jasa" required render={(field) => <MoneyInput {...field} placeholder="Biaya jasa" />} />
 
       {stockShort && (
         <Alert
