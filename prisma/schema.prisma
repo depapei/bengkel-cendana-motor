@@ -136,13 +136,34 @@ model SparePart {
   @@map("spare_parts")
 }
 
+model Mechanic {
+  id   String @id @default(uuid(7))
+  name String @unique
+
+  orders Order[]
+
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  createdBy String?
+  updatedAt DateTime  @updatedAt @db.Timestamptz
+  updatedBy String?
+  deletedAt DateTime? @db.Timestamptz
+  deletedBy String?
+
+  @@map("mechanics")
+}
+
 model Order {
   id                String         @id @default(uuid(7))
   orderNo           String         @unique
   customerId        String
   customerVehicleId String
+  mechanicId        String?
   complaint         String
   notes             String?
+  mileage           Int? // kilometer motor saat masuk bengkel
+  mechanicNote      String? // catatan internal mekanik (hanya bila mekanik sudah ditugaskan)
+  nextServiceDate   DateTime?      @db.Date
+  nextServiceNote   String?
   totalPrice        Int            @default(0)
   status            OrderStatus    @default(draft)
   cancelReason      String?
@@ -158,6 +179,7 @@ model Order {
 
   customer        Customer        @relation(fields: [customerId], references: [id])
   customerVehicle CustomerVehicle @relation(fields: [customerVehicleId], references: [id])
+  mechanic        Mechanic?       @relation(fields: [mechanicId], references: [id])
   serviceFees     ServiceFee[]
   stockMovements  StockMovement[]
 
@@ -170,6 +192,7 @@ model Order {
 
   @@index([status])
   @@index([customerVehicleId])
+  @@index([mechanicId])
   @@map("orders")
 }
 
