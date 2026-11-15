@@ -1,9 +1,8 @@
 "use client";
 
-import type { KeyboardEvent } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Input } from "antd";
+import { Input } from "antd";
 import { FormField } from "@/components/molecules/form-field";
+import { QuickAddRow } from "@/components/molecules/quick-add-row";
 import { useSaveBrand } from "@/hooks/queries/use-brands";
 import { useZodForm } from "@/hooks/use-zod-form";
 import { brandSchema } from "@/schemas/brand.schema";
@@ -13,11 +12,7 @@ interface BrandQuickAddProps {
   onCreated: (brand: Brand) => void;
 }
 
-/**
- * Form mini tambah merek & tipe di dalam dropdown BrandSelect.
- * Sengaja tanpa <form>: dropdown di-portal tapi event React tetap bubble
- * ke form induk (customer/kendaraan), jadi submit ditangani manual.
- */
+/** Form mini tambah merek & tipe di dalam dropdown BrandSelect. */
 export function BrandQuickAdd({ onCreated }: BrandQuickAddProps) {
   const { control, handleSubmit, reset } = useZodForm(brandSchema, { name: "", type: "" });
   const save = useSaveBrand(undefined, (brand) => {
@@ -25,19 +20,8 @@ export function BrandQuickAdd({ onCreated }: BrandQuickAddProps) {
     onCreated(brand);
   });
 
-  const submit = handleSubmit((values) => save.mutate(values));
-
-  // Cegah Select induk menangkap tombol keyboard (spasi, panah, Enter).
-  const handleKeyDown = (event: KeyboardEvent) => {
-    event.stopPropagation();
-    if (event.key === "Enter") {
-      event.preventDefault();
-      void submit();
-    }
-  };
-
   return (
-    <Flex gap={8} align="flex-start" className="px-2 pt-2 pb-1" onKeyDown={handleKeyDown}>
+    <QuickAddRow loading={save.isPending} onSubmit={() => void handleSubmit((values) => save.mutate(values))()}>
       <FormField
         control={control}
         name="name"
@@ -50,9 +34,6 @@ export function BrandQuickAdd({ onCreated }: BrandQuickAddProps) {
         className="mb-0 flex-1"
         render={(field) => <Input {...field} placeholder="Tipe (Vario 125)" />}
       />
-      <Button type="primary" icon={<PlusOutlined />} loading={save.isPending} onClick={() => void submit()}>
-        Tambah
-      </Button>
-    </Flex>
+    </QuickAddRow>
   );
 }

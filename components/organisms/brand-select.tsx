@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Divider, Select, type SelectProps } from "antd";
+import type { SelectProps } from "antd";
+import { QuickAddSelect } from "@/components/molecules/quick-add-select";
 import { useBrands } from "@/hooks/queries/use-brands";
 import type { Brand } from "@/types/models";
 import { BrandQuickAdd } from "./brand-quick-add";
@@ -29,16 +29,10 @@ function groupByBrand(brands: Brand[]) {
 /** Pilih merek & tipe motor; merek/tipe baru bisa langsung ditambahkan dari dropdown. */
 export function BrandSelect({ onChange, ...props }: Omit<SelectProps<string>, "options">) {
   const { data = [], isLoading } = useBrands();
-  const [open, setOpen] = useState(false);
   const brandById = new Map(data.map((brand) => [brand.id, brand]));
 
-  const handleCreated = (brand: Brand) => {
-    onChange?.(brand.id, { value: brand.id, label: brandLabel(brand) });
-    setOpen(false);
-  };
-
   return (
-    <Select<string>
+    <QuickAddSelect<string>
       showSearch={{
         filterOption: (input, option) => (option as BrandOption | undefined)?.search.includes(input.toLowerCase()) ?? false,
       }}
@@ -50,15 +44,14 @@ export function BrandSelect({ onChange, ...props }: Omit<SelectProps<string>, "o
         const brand = brandById.get(String(value));
         return brand ? brandLabel(brand) : label;
       }}
-      open={open}
-      onOpenChange={setOpen}
       onChange={onChange}
-      popupRender={(menu) => (
-        <>
-          {menu}
-          <Divider className="my-2" />
-          <BrandQuickAdd onCreated={handleCreated} />
-        </>
+      renderQuickAdd={(close) => (
+        <BrandQuickAdd
+          onCreated={(brand) => {
+            onChange?.(brand.id, { value: brand.id, label: brandLabel(brand) });
+            close();
+          }}
+        />
       )}
       {...props}
     />
