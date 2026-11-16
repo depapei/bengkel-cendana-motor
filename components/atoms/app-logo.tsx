@@ -5,13 +5,18 @@ import { APP_NAME } from "@/constants/app";
 
 interface AppLogoProps {
   inverted?: boolean;
+  /** Tampilkan ikon saja, mis. saat sidebar diciutkan. */
+  iconOnly?: boolean;
 }
 
-export function AppLogo({ inverted }: AppLogoProps) {
+export function AppLogo({ inverted, iconOnly }: AppLogoProps) {
   return (
-    <span className={`flex items-center gap-2 text-lg font-semibold ${inverted ? "text-white" : "text-stone-900"}`}>
+    <span
+      className={`flex items-center gap-2 text-lg font-semibold ${inverted ? "text-white" : "text-stone-900"}`}
+      title={iconOnly ? APP_NAME : undefined}
+    >
       <ToolOutlined />
-      {APP_NAME}
+      {!iconOnly && <span className="truncate">{APP_NAME}</span>}
     </span>
   );
 }
