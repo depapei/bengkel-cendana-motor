@@ -2,6 +2,7 @@
 
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
+import { IconButton } from "@/components/atoms/icon-button";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
 import { DataTable } from "@/components/molecules/data-table";
 import { PageHeader } from "@/components/molecules/page-header";
@@ -40,8 +41,8 @@ export function BrandManager() {
             width: 120,
             render: (_, brand) => (
               <Space>
-                <Button icon={<EditOutlined />} onClick={() => modal.show(brand)} />
-                <ConfirmButton confirmTitle="Hapus merek ini?" onConfirm={() => remove.mutate(brand.id)} />
+                <IconButton label="Ubah merek" icon={<EditOutlined />} onClick={() => modal.show(brand)} />
+                <ConfirmButton label="Hapus merek" confirmTitle="Hapus merek ini?" onConfirm={() => remove.mutate(brand.id)} />
               </Space>
             ),
           },

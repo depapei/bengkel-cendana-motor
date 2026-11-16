@@ -3,6 +3,7 @@
 import { useRouter } from "nextjs-toploader/app";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Select, Space } from "antd";
+import { IconButton } from "@/components/atoms/icon-button";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
 import { DataTable } from "@/components/molecules/data-table";
 import { PageHeader } from "@/components/molecules/page-header";
@@ -66,8 +67,8 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
                 width: 120,
                 render: (_, vehicle) => (
                   <Space>
-                    <Button icon={<EditOutlined />} onClick={() => vehicleModal.show(vehicle)} />
-                    <ConfirmButton confirmTitle="Hapus kendaraan ini?" onConfirm={() => removeVehicle.mutate(vehicle.id)} />
+                    <IconButton label="Ubah kendaraan" icon={<EditOutlined />} onClick={() => vehicleModal.show(vehicle)} />
+                    <ConfirmButton label="Hapus kendaraan" confirmTitle="Hapus kendaraan ini?" onConfirm={() => removeVehicle.mutate(vehicle.id)} />
                   </Space>
                 ),
               },

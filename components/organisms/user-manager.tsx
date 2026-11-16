@@ -2,6 +2,7 @@
 
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Result, Space } from "antd";
+import { IconButton } from "@/components/atoms/icon-button";
 import { StatusTag } from "@/components/atoms/status-tag";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
 import { DataTable } from "@/components/molecules/data-table";
@@ -50,8 +51,9 @@ export function UserManager() {
             width: 120,
             render: (_, user) => (
               <Space>
-                <Button icon={<EditOutlined />} onClick={() => modal.show(user)} />
+                <IconButton label="Ubah user" icon={<EditOutlined />} onClick={() => modal.show(user)} />
                 <ConfirmButton
+                  label="Hapus user"
                   confirmTitle="Hapus user ini?"
                   disabled={user.id === me?.id}
                   onConfirm={() => remove.mutate(user.id)}

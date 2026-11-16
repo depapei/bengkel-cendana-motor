@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
+import { IconButton } from "@/components/atoms/icon-button";
 import { Money } from "@/components/atoms/money";
 import { StockBadge } from "@/components/atoms/stock-badge";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
@@ -53,8 +54,8 @@ export function SparePartManager() {
             width: 120,
             render: (_, part) => (
               <Space>
-                <Button icon={<EditOutlined />} onClick={() => modal.show(part)} />
-                <ConfirmButton confirmTitle="Hapus sparepart ini?" onConfirm={() => remove.mutate(part.id)} />
+                <IconButton label="Ubah sparepart" icon={<EditOutlined />} onClick={() => modal.show(part)} />
+                <ConfirmButton label="Hapus sparepart" confirmTitle="Hapus sparepart ini?" onConfirm={() => remove.mutate(part.id)} />
               </Space>
             ),
           },

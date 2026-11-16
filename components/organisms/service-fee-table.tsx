@@ -2,6 +2,7 @@
 
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Space, Table, Typography } from "antd";
+import { IconButton } from "@/components/atoms/icon-button";
 import { Money } from "@/components/atoms/money";
 import { StockBadge } from "@/components/atoms/stock-badge";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
@@ -69,8 +70,8 @@ export function ServiceFeeTable({ order }: { order: OrderDetail }) {
                   width: 120,
                   render: (_: unknown, item: ServiceFee) => (
                     <Space>
-                      <Button icon={<EditOutlined />} onClick={() => modal.show(item)} />
-                      <ConfirmButton confirmTitle="Hapus item ini?" onConfirm={() => remove.mutate(item.id)} />
+                      <IconButton label="Ubah item" icon={<EditOutlined />} onClick={() => modal.show(item)} />
+                      <ConfirmButton label="Hapus item" confirmTitle="Hapus item ini?" onConfirm={() => remove.mutate(item.id)} />
                     </Space>
                   ),
                 },
