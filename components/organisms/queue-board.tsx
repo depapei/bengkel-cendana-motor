@@ -33,13 +33,14 @@ export function QueueBoard() {
         subtitle={`${data ? `${formatDate(data.date)} · ` : ""}Diperbarui otomatis setiap ${QUEUE_REFRESH_INTERVAL_MS / MS_PER_SECOND} detik`}
       />
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
         {Object.values(OrderStatus).map((status) => (
           <StatCard
             key={status}
             title={<StatusTag value={status} meta={QUEUE_STATUS_META} />}
             value={data?.statusCounts[status] ?? 0}
             loading={isLoading}
+            size="small"
           />
         ))}
       </div>

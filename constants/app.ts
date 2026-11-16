@@ -18,6 +18,8 @@ export const QUEUE_REFRESH_INTERVAL_MS = 30_000;
 export const LOW_STOCK_THRESHOLD = 5;
 /** Jumlah sparepart stok menipis yang ditampilkan di dashboard. */
 export const LOW_STOCK_LIMIT = 10;
+/** Jumlah order terbaru yang ditampilkan di dashboard. */
+export const RECENT_ORDERS_LIMIT = 5;
 
 export const WHATSAPP_BASE_URL = "https://wa.me";
 

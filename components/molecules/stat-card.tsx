@@ -13,13 +13,17 @@ interface StatCardProps {
   loading?: boolean;
   /** Jika diisi, seluruh kartu menjadi link. */
   href?: string;
+  /** `small` = kartu & angka lebih ringkas (mis. papan antrean). */
+  size?: "default" | "small";
 }
 
 /** Kartu angka ringkasan (dashboard & laporan). */
-export function StatCard({ title, value, money, loading, href }: StatCardProps) {
+export function StatCard({ title, value, money, loading, href, size = "default" }: StatCardProps) {
+  const small = size === "small";
   const card = (
-    <Card hoverable={!!href} className="h-full">
+    <Card hoverable={!!href} size={small ? "small" : "default"} className="h-full">
       <Statistic
+        classNames={small ? { title: "mb-1", content: "text-xl" } : undefined}
         title={title}
         value={value}
         loading={loading}

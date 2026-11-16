@@ -12,7 +12,8 @@ import { ORDER_STATUS_META, OrderStatus } from "@/constants/order-status";
 import { AppRoute } from "@/constants/routes";
 import { useDashboardSummary } from "@/hooks/queries/use-reports";
 import type { DashboardSummary } from "@/types/report";
-import { buildUrl } from "@/utils/url";
+import { buildUrl, withQuery } from "@/utils/url";
+import { RecentOrdersCard } from "./recent-orders-card";
 
 export function DashboardOverview() {
   const query = useDashboardSummary();
@@ -37,28 +38,35 @@ function DashboardContent({ summary }: { summary: DashboardSummary }) {
             key={status}
             title={<StatusTag value={status} meta={ORDER_STATUS_META} />}
             value={orderStatusCounts[status]}
-            href={AppRoute.Orders}
+            href={withQuery(AppRoute.Orders, { status })}
+            size="small"
           />
         ))}
       </div>
 
-      <Card
-        title={`Stok Menipis (≤ ${LOW_STOCK_THRESHOLD})`}
-        extra={hiddenCount > 0 && <Link href={AppRoute.SpareParts}>+{hiddenCount} lainnya</Link>}
-      >
-        {lowStockParts.length === 0 ? (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Semua stok aman" />
-        ) : (
-          <Flex vertical gap={12}>
-            {lowStockParts.map((part) => (
-              <Flex key={part.id} justify="space-between" align="center" gap={16}>
-                <Link href={buildUrl(AppRoute.SparePartDetail, { id: part.id })}>{part.name}</Link>
-                <StockBadge stock={part.stock} required={LOW_STOCK_THRESHOLD + 1} />
-              </Flex>
-            ))}
-          </Flex>
-        )}
-      </Card>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <RecentOrdersCard />
+        </div>
+        <Card
+          className="h-full"
+          title={`Stok Menipis (≤ ${LOW_STOCK_THRESHOLD})`}
+          extra={hiddenCount > 0 && <Link href={AppRoute.SpareParts}>+{hiddenCount} lainnya</Link>}
+        >
+          {lowStockParts.length === 0 ? (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Semua stok aman" />
+          ) : (
+            <Flex vertical gap={12}>
+              {lowStockParts.map((part) => (
+                <Flex key={part.id} justify="space-between" align="center" gap={16}>
+                  <Link href={buildUrl(AppRoute.SparePartDetail, { id: part.id })}>{part.name}</Link>
+                  <StockBadge stock={part.stock} required={LOW_STOCK_THRESHOLD + 1} />
+                </Flex>
+              ))}
+            </Flex>
+          )}
+        </Card>
+      </div>
     </>
   );
 }
