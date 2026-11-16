@@ -60,6 +60,12 @@ export const ITEM_EDITABLE_STATUSES: readonly OrderStatus[] = [
   OrderStatus.in_progress,
 ];
 
+/** Status yang wajib sudah punya mekanik (tidak bisa mulai dikerjakan / dilepas tanpa mekanik). */
+export const MECHANIC_REQUIRED_STATUSES: readonly OrderStatus[] = [
+  OrderStatus.in_progress,
+  OrderStatus.done,
+];
+
 /** Kolom timestamp yang diisi saat order masuk ke status tsb. */
 export const ORDER_STATUS_TIMESTAMP_FIELD = {
   [OrderStatus.draft]: "draftAt",

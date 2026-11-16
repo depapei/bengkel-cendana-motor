@@ -8,7 +8,7 @@ import { InfoDescriptions } from "@/components/molecules/info-descriptions";
 import { InlineEdit } from "@/components/molecules/inline-edit";
 import { MILEAGE_UNIT } from "@/constants/app";
 import { MESSAGE } from "@/constants/messages";
-import { ITEM_EDITABLE_STATUSES, ORDER_STATUS_META } from "@/constants/order-status";
+import { ITEM_EDITABLE_STATUSES, MECHANIC_REQUIRED_STATUSES, ORDER_STATUS_META } from "@/constants/order-status";
 import { PAYMENT_METHOD_META, PAYMENT_STATUS_META } from "@/constants/payment";
 import { AppRoute } from "@/constants/routes";
 import { useUpdateOrder } from "@/hooks/queries/use-orders";
@@ -26,6 +26,7 @@ type OrderValues = Omit<OrderInput, "mileage"> & { mileage: number | null };
 export function OrderInfoCard({ order }: { order: OrderDetail }) {
   const update = useUpdateOrder(order.id);
   const editable = ITEM_EDITABLE_STATUSES.includes(order.status);
+  const mechanicRequired = MECHANIC_REQUIRED_STATUSES.includes(order.status);
 
   // API update menerima seluruh field → kirim nilai saat ini + field yang diubah.
   const current: OrderValues = {
@@ -49,6 +50,7 @@ export function OrderInfoCard({ order }: { order: OrderDetail }) {
     editable,
     loading: update.isPending,
     validate: (value: T) => {
+      if (name === "mechanicId" && mechanicRequired && !value) return MESSAGE.mechanicRequired;
       const result = orderSchema.safeParse(patch(name, value));
       return result.success ? undefined : result.error.issues.find((issue) => issue.path[0] === name)?.message;
     },
@@ -132,7 +134,7 @@ export function OrderInfoCard({ order }: { order: OrderDetail }) {
                 value={order.mechanicId}
                 display={order.mechanic?.name ?? "Belum ditugaskan"}
                 renderInput={({ value, onChange, status, autoFocus }) => (
-                  <MechanicSelect status={status} autoFocus={autoFocus} value={value ?? undefined} onChange={(id) => onChange(id ?? null)} className="w-full" />
+                  <MechanicSelect allowClear={!mechanicRequired} status={status} autoFocus={autoFocus} value={value ?? undefined} onChange={(id) => onChange(id ?? null)} className="w-full" />
                 )}
               />
             ),

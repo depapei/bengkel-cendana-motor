@@ -1,7 +1,9 @@
 "use client";
 
 import { Button, Popconfirm, Tooltip } from "antd";
+import { MESSAGE } from "@/constants/messages";
 import {
+  MECHANIC_REQUIRED_STATUSES,
   ORDER_STATUS_ACTION_LABEL,
   ORDER_STATUS_META,
   ORDER_STATUS_TRANSITIONS,
@@ -39,7 +41,12 @@ export function OrderStatusActions({ order, shortageCount }: OrderStatusActionsP
             </Button>
           );
         }
-        const blocker = target === OrderStatus.booked ? bookingBlocker : undefined;
+        const blocker =
+          target === OrderStatus.booked
+            ? bookingBlocker
+            : MECHANIC_REQUIRED_STATUSES.includes(target) && !order.mechanicId
+              ? MESSAGE.mechanicRequired
+              : undefined;
         return (
           <Tooltip key={target} title={blocker}>
             <Popconfirm

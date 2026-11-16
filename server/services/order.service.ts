@@ -2,10 +2,12 @@ import "server-only";
 import dayjs from "dayjs";
 import { Prisma } from "@/generated/prisma/client";
 import { APP_TIMEZONE } from "@/constants/app";
+import { MESSAGE } from "@/constants/messages";
 import {
   DRAFT_EXPIRY_DAYS,
   DRAFT_EXPIRY_REASON,
   ITEM_EDITABLE_STATUSES,
+  MECHANIC_REQUIRED_STATUSES,
   ORDER_NO_PREFIX,
   ORDER_STATUS_META,
   ORDER_STATUS_TIMESTAMP_FIELD,
@@ -151,6 +153,7 @@ export async function updateOrder(id: string, data: OrderData, userId: string) {
   await db.$transaction(async (tx) => {
     const order = await lockOrder(tx, id);
     assertEditable(order);
+    if (MECHANIC_REQUIRED_STATUSES.includes(order.status) && !data.mechanicId) throw badRequest(MESSAGE.mechanicRequired);
     await assertMechanic(tx, data.mechanicId);
     await tx.order.update({ where: { id }, data: { ...toOrderColumns(data), ...auditUpdate(userId) } });
   });
@@ -273,6 +276,8 @@ export async function changeStatus(id: string, { status, cancelReason, returns =
         `Status tidak bisa diubah dari ${ORDER_STATUS_META[order.status].label} ke ${ORDER_STATUS_META[status].label}`,
       );
     }
+
+    if (MECHANIC_REQUIRED_STATUSES.includes(status) && !order.mechanicId) throw badRequest(MESSAGE.mechanicRequired);
 
     const items = await tx.serviceFee.findMany({ where: { orderId: id, ...notDeleted } });
     const stock = { orderId: id, userId };
