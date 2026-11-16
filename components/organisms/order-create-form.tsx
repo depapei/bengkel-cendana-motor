@@ -70,7 +70,11 @@ export function OrderCreateForm() {
                   </Button>
                 </Empty>
               ) : (
-                <Empty description="Ketik untuk mencari customer" />
+                <Empty description="Ketik untuk mencari customer">
+                  <Button size="large" type="primary" icon={<UserAddOutlined />} onClick={() => customerModal.show()}>
+                    Customer Baru
+                  </Button>
+                </Empty>
               ),
             }}
             renderItem={(customer) => (
