@@ -80,7 +80,7 @@ export function InlineEdit<T>({ value, display, editable = true, loading, valida
 
   if (!editing) {
     return (
-      <Tooltip title="Klik untuk mengubah" mouseEnterDelay={0.5}>
+      <Tooltip title="Klik untuk mengubah" placement="bottomLeft">
         <div
           role="button"
           tabIndex={0}
@@ -89,10 +89,11 @@ export function InlineEdit<T>({ value, display, editable = true, loading, valida
           // Border selalu ada (transparan) agar hover tidak menggeser layout; margin negatif = padding + border,
           // sehingga teks sejajar dengan label. Lebar = sel penuh (+ margin negatif) supaya sama dengan mode edit —
           // parent bisa flex (mis. Descriptions), jadi lebar harus eksplisit, bukan auto.
-          className="group -mx-[9px] -my-[5px] flex w-[calc(100%+18px)] cursor-pointer items-start gap-2 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-primary dark:hover:bg-white/10"
+          className="group -mx-[9px] -my-[5px] flex w-[calc(100%+18px)] cursor-pointer items-start gap-2 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-primary"
         >
-          <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">{content}</span>
-          <EditOutlined className="mt-1 opacity-0 transition-opacity group-hover:opacity-60" />
+          {/* Tanpa flex-1: pensil menempel tepat di samping teks, bukan di ujung kanan sel. */}
+          <span className="min-w-0 whitespace-pre-wrap break-words">{content}</span>
+          <EditOutlined className="mt-1 shrink-0 opacity-0 transition-opacity group-hover:opacity-60" />
         </div>
       </Tooltip>
     );
