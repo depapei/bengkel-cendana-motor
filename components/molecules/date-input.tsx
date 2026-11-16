@@ -4,7 +4,7 @@ import dayjs, { type Dayjs } from "dayjs";
 import { DatePicker, type DatePickerProps } from "antd";
 import { DATE_FORMAT, DATE_ONLY_FORMAT } from "@/constants/app";
 
-interface DateInputProps extends Pick<DatePickerProps, "placeholder" | "disabled" | "onBlur" | "allowClear"> {
+interface DateInputProps extends Pick<DatePickerProps, "placeholder" | "disabled" | "onBlur" | "allowClear" | "status" | "autoFocus"> {
   /** Tanggal `YYYY-MM-DD`. */
   value?: string | null;
   onChange?: (value: string | null) => void;
