@@ -1,10 +1,10 @@
 "use client";
 
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Space } from "antd";
+import { Button } from "antd";
 import { IconButton } from "@/components/atoms/icon-button";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
-import { DataTable } from "@/components/molecules/data-table";
+import { actionColumn, DataTable } from "@/components/molecules/data-table";
 import { PageHeader } from "@/components/molecules/page-header";
 import { TableCard } from "@/components/molecules/table-card";
 import { useBrands, useDeleteBrand } from "@/hooks/queries/use-brands";
@@ -29,25 +29,21 @@ export function BrandManager() {
         }
       />
       <TableCard>
-      <DataTable<Brand>
-        loading={isLoading}
-        dataSource={data}
-        pagination={false}
-        columns={[
-          { title: "Merek", dataIndex: "name" },
-          { title: "Tipe", dataIndex: "type" },
-          {
-            title: "Aksi",
-            width: 120,
-            render: (_, brand) => (
-              <Space>
+        <DataTable<Brand>
+          loading={isLoading}
+          dataSource={data}
+          pagination={false}
+          columns={[
+            { title: "Merek", dataIndex: "name" },
+            { title: "Tipe", dataIndex: "type" },
+            actionColumn((brand) => (
+              <>
                 <IconButton label="Ubah merek" icon={<EditOutlined />} onClick={() => modal.show(brand)} />
                 <ConfirmButton label="Hapus merek" confirmTitle="Hapus merek ini?" onConfirm={() => remove.mutate(brand.id)} />
-              </Space>
-            ),
-          },
-        ]}
-      />
+              </>
+            )),
+          ]}
+        />
       </TableCard>
       {modal.render(<BrandFormModal record={modal.record} onClose={modal.close} />)}
     </>

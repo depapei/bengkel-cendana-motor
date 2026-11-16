@@ -1,9 +1,9 @@
 "use client";
 
 import { useId, type FormEventHandler, type ReactNode } from "react";
-import { Modal } from "antd";
-import { useModalPresence } from "@/hooks/use-modal-state";
+import { Button, Flex } from "antd";
 import { FormContainer } from "./form-container";
+import { ResponsiveModal } from "./responsive-modal";
 
 interface FormModalProps {
   title: ReactNode;
@@ -17,28 +17,40 @@ interface FormModalProps {
 }
 
 /**
- * Modal berisi form. Dirender lewat `modal.render(<XxxFormModal/>)` — di-mount saat dibuka
- * (defaultValues RHF selalu segar tanpa reset manual) dan baru di-unmount setelah animasi tutup.
+ * Modal berisi form (Drawer bawah di mobile). Dirender lewat `modal.render(<XxxFormModal/>)` — di-mount
+ * saat dibuka (defaultValues RHF selalu segar tanpa reset manual) dan baru di-unmount setelah animasi tutup.
  */
 export function FormModal({ title, onSubmit, onCancel, loading, okText = "Simpan", okDanger, width, children }: FormModalProps) {
   const formId = useId();
-  const { open, afterClose } = useModalPresence();
+
   return (
-    <Modal
-      open={open}
-      afterClose={afterClose}
+    <ResponsiveModal
       title={title}
       width={width}
       onCancel={onCancel}
-      okText={okText}
-      cancelText="Batal"
-      confirmLoading={loading}
-      okButtonProps={{ size: "large", htmlType: "submit", form: formId, danger: okDanger }}
-      cancelButtonProps={{ size: "large" }}
+      footer={
+        // Mobile: dua tombol sama lebar memenuhi drawer.
+        <Flex justify="end" gap={8}>
+          <Button size="large" onClick={onCancel} className="max-lg:flex-1">
+            Batal
+          </Button>
+          <Button
+            size="large"
+            type="primary"
+            htmlType="submit"
+            form={formId}
+            loading={loading}
+            danger={okDanger}
+            className="max-lg:flex-1"
+          >
+            {okText}
+          </Button>
+        </Flex>
+      }
     >
       <FormContainer id={formId} onSubmit={onSubmit}>
         {children}
       </FormContainer>
-    </Modal>
+    </ResponsiveModal>
   );
 }

@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { APP_NAME } from "@/constants/app";
+import { PAGE_BG } from "@/lib/antd-theme";
 import { AppProvider } from "@/providers/app-provider";
 import "./globals.css";
 
@@ -18,6 +19,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: { default: APP_NAME, template: `%s · ${APP_NAME}` },
   description: "Sistem pencatatan order servis Bengkel Cendana Motor",
+};
+
+/** `cover` → halaman memakai seluruh layar; area notch/home indicator diatur lewat env(safe-area-inset-*). */
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  themeColor: PAGE_BG,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

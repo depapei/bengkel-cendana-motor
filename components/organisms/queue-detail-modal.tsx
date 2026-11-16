@@ -1,14 +1,14 @@
 "use client";
 
-import { Card, Empty, Flex, List, Modal, Typography } from "antd";
+import { Card, Empty, Flex, List, Typography } from "antd";
 import { StatusTag } from "@/components/atoms/status-tag";
 import { VehicleLabel } from "@/components/atoms/vehicle-label";
 import { InfoDescriptions } from "@/components/molecules/info-descriptions";
 import { QueryState } from "@/components/molecules/query-state";
 import { QueueProgress } from "@/components/molecules/queue-progress";
+import { ResponsiveModal } from "@/components/molecules/responsive-modal";
 import { QUEUE_STATUS_META } from "@/constants/order-status";
 import { useQueueOrder } from "@/hooks/queries/use-queue";
-import { useModalPresence } from "@/hooks/use-modal-state";
 import type { QueueOrderDetail } from "@/types/queue";
 import { formatDateOnly, formatMileage } from "@/utils/format";
 import { queueNumber } from "@/utils/order";
@@ -23,12 +23,11 @@ const MODAL_WIDTH = 720;
 /** Detail pengerjaan untuk customer — tanpa harga jasa / sparepart. */
 export function QueueDetailModal({ id, onClose }: QueueDetailModalProps) {
   const query = useQueueOrder(id);
-  const { open, afterClose } = useModalPresence();
 
   return (
-    <Modal open={open} afterClose={afterClose} title="Detail Pengerjaan" footer={null} width={MODAL_WIDTH} onCancel={onClose}>
+    <ResponsiveModal title="Detail Pengerjaan" width={MODAL_WIDTH} onCancel={onClose}>
       <QueryState {...query}>{(order) => <QueueDetailContent order={order} />}</QueryState>
-    </Modal>
+    </ResponsiveModal>
   );
 }
 

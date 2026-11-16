@@ -1,12 +1,13 @@
 "use client";
 
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Space, Table, Typography } from "antd";
+import { Button, Flex, Table, Typography } from "antd";
 import { IconButton } from "@/components/atoms/icon-button";
 import { Money } from "@/components/atoms/money";
 import { StockBadge } from "@/components/atoms/stock-badge";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
-import { DataTable } from "@/components/molecules/data-table";
+import { actionColumn, DataTable } from "@/components/molecules/data-table";
+import { TableCard } from "@/components/molecules/table-card";
 import { ITEM_EDITABLE_STATUSES, OrderStatus } from "@/constants/order-status";
 import { useRemoveOrderItem } from "@/hooks/queries/use-orders";
 import { useModalState } from "@/hooks/use-modal-state";
@@ -19,9 +20,11 @@ export function ServiceFeeTable({ order }: { order: OrderDetail }) {
   const remove = useRemoveOrderItem(order.id);
   const editable = ITEM_EDITABLE_STATUSES.includes(order.status);
   const showStock = order.status === OrderStatus.draft;
+  const totalLabel = <Typography.Text strong>Total</Typography.Text>;
+  const total = <Money value={order.totalPrice} strong />;
 
   return (
-    <Card
+    <TableCard
       title="Rincian Servis"
       extra={
         editable && (
@@ -34,6 +37,12 @@ export function ServiceFeeTable({ order }: { order: OrderDetail }) {
       <DataTable<ServiceFee>
         dataSource={order.serviceFees}
         pagination={false}
+        cardFooter={
+          <Flex justify="space-between" align="center">
+            {totalLabel}
+            {total}
+          </Flex>
+        }
         columns={[
           {
             title: "Pekerjaan",
@@ -64,33 +73,28 @@ export function ServiceFeeTable({ order }: { order: OrderDetail }) {
           { title: "Subtotal", dataIndex: "subtotal", align: "right", render: (v: number) => <Money value={v} strong /> },
           ...(editable
             ? [
-                {
-                  title: "Aksi",
-                  key: "actions",
-                  width: 120,
-                  render: (_: unknown, item: ServiceFee) => (
-                    <Space>
-                      <IconButton label="Ubah item" icon={<EditOutlined />} onClick={() => modal.show(item)} />
-                      <ConfirmButton label="Hapus item" confirmTitle="Hapus item ini?" onConfirm={() => remove.mutate(item.id)} />
-                    </Space>
-                  ),
-                },
+                actionColumn<ServiceFee>((item) => (
+                  <>
+                    <IconButton label="Ubah item" icon={<EditOutlined />} onClick={() => modal.show(item)} />
+                    <ConfirmButton label="Hapus item" confirmTitle="Hapus item ini?" onConfirm={() => remove.mutate(item.id)} />
+                  </>
+                )),
               ]
             : []),
         ]}
         summary={() => (
           <Table.Summary.Row>
             <Table.Summary.Cell index={0} colSpan={showStock ? 5 : 4}>
-              <Typography.Text strong>Total</Typography.Text>
+              {totalLabel}
             </Table.Summary.Cell>
             <Table.Summary.Cell index={1} align="right">
-              <Money value={order.totalPrice} strong />
+              {total}
             </Table.Summary.Cell>
             {editable && <Table.Summary.Cell index={2} />}
           </Table.Summary.Row>
         )}
       />
       {modal.render(<ServiceFeeFormModal order={order} record={modal.record} onClose={modal.close} />)}
-    </Card>
+    </TableCard>
   );
 }

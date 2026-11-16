@@ -14,7 +14,7 @@ const OPTIONS = [
   { value: ViewMode.Table, icon: <UnorderedListOutlined />, title: "Tabel" },
 ];
 
-/** Pengalih tampilan daftar: card / tabel. */
+/** Pengalih tampilan daftar: card / tabel. Hanya desktop — mobile selalu card. */
 export function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
-  return <Segmented<ViewMode> size="large" options={OPTIONS} value={value} onChange={onChange} />;
+  return <Segmented<ViewMode> size="large" options={OPTIONS} value={value} onChange={onChange} className="max-lg:hidden" />;
 }

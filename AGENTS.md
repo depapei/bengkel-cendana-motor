@@ -87,6 +87,7 @@ Aturan tambahan:
 - Komponen di `components/` tidak boleh import dari `app/`.
 - Komponen yang hanya dipakai satu halaman tetap ditaruh di `components/` sesuai levelnya (tidak membuat folder komponen di dalam `app/`).
 - Semua file di `components/` yang meng-import `antd` / `@ant-design/icons` **wajib** `'use client'` (AntD butuh React context). `app/**/page.tsx` dan `layout.tsx` tetap Server Component dan hanya merender organism/template.
+- Jangan memakai `Modal` AntD langsung — pakai `FormModal` (form) atau `ResponsiveModal` (non-form). Keduanya tampil sebagai Modal di desktop dan Drawer bawah selebar layar di mobile.
 - Form modal dirender hanya saat dibuka: `{modal.open && <XxxFormModal record={modal.record} onClose={modal.close} />}` (pakai `useModalState`), jadi `defaultValues` selalu segar tanpa reset manual.
 
 ## Rule 3 — WAJIB Static ENUM
@@ -156,6 +157,8 @@ Alur wajib: **Komponen → hook (`hooks/queries/`) → service (`services/`) →
 - Tema (warna brand, font, radius) hanya diatur di `lib/antd-theme.ts` lewat `ConfigProvider theme` — dilarang override warna/style AntD secara inline di komponen.
 - Untuk spacing pakai komponen layout AntD (`Flex`, `Space`, `Row`/`Col`) atau Tailwind; jangan campur keduanya untuk hal yang sama di satu komponen.
 - Jarak antar-blok halaman sudah diatur di `DashboardLayout` (`gap-6`) — organism tidak perlu menambah `mb-*` antar section. Tabel daftar dibungkus `TableCard` (toolbar pencarian/filter lewat prop `toolbar`).
+- Layout mobile (< `lg`): tanpa header & sidebar, navigasi lewat floating dock (`MobileDock`, maks. 5 menu) dan halaman Pengaturan untuk sisa menu. Menu hanya didefinisikan di `constants/navigation.ts` (`dock: true` = tampil di dock). Pergantian desktop/mobile memakai CSS breakpoint, bukan `useBreakpoint`, supaya tidak berkedip saat hydration.
+- Semua daftar data di mobile wajib tampil sebagai grid card 2 kolom, langsung di halaman tanpa wadah/sub-section tambahan (`TableCard` otomatis lebur di mobile): pakai `DataTable` / `DataView` / `DataGrid` (otomatis), card item dibangun dari `ListCard`. `DataTable` tanpa `renderItem` membuat card dari kolomnya (`RecordCard`) — kolom pertama jadi judul, jadi urutkan kolom identitas di depan. Kolom aksi wajib lewat `actionColumn(...)` agar tampil sebagai footer card.
 - `AntdRegistry layer` + urutan `@layer theme, base, antd, components, utilities` di `app/globals.css` jangan diubah.
 
 ## Rule 6 — Form (React Hook Form)

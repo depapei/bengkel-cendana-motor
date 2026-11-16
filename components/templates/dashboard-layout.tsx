@@ -1,19 +1,23 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Drawer, Layout } from "antd";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Layout } from "antd";
 import { AppLogo } from "@/components/atoms/app-logo";
 import { IconButton } from "@/components/atoms/icon-button";
 import { AppNavigation } from "@/components/organisms/app-navigation";
+import { MobileDock } from "@/components/organisms/mobile-dock";
 import { UserMenu } from "@/components/organisms/user-menu";
-import { SIDEBAR_BG } from "@/lib/antd-theme";
 
 const SIDER_WIDTH = 240;
 const SIDER_COLLAPSED_WIDTH = 80;
 
+/**
+ * Desktop (lg+): sidebar + header. Mobile: tanpa header & sidebar — navigasi lewat floating dock
+ * di bawah, akun & menu lainnya di halaman Pengaturan. Semua lewat CSS breakpoint, jadi tidak ada
+ * kedipan layout saat hydration.
+ */
 export function DashboardLayout({ children }: { children: ReactNode }) {
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -35,41 +39,24 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
       </Layout.Sider>
 
-      <Drawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        placement="left"
-        size={SIDER_WIDTH}
-        title={<AppLogo />}
-        styles={{ body: { padding: 8, background: SIDEBAR_BG } }}
-      >
-        <AppNavigation onNavigate={() => setDrawerOpen(false)} />
-      </Drawer>
-
-      <Layout>
-        <Layout.Header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-stone-200 px-4 md:px-8">
-          {/* Mobile: buka drawer. Desktop: buka/tutup sidebar. */}
-          <Button
-            size="large"
-            type="text"
-            icon={<MenuOutlined />}
-            aria-label="Buka menu"
-            className="lg:hidden"
-            onClick={() => setDrawerOpen(true)}
-          />
+      <Layout className="min-w-0 pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]">
+        <Layout.Header className="sticky top-0 z-10 hidden items-center justify-between gap-4 border-b border-stone-200 px-8 lg:flex">
           <IconButton
             label={collapsed ? "Buka sidebar" : "Tutup sidebar"}
             tooltipPlacement="right"
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            className="hidden lg:inline-flex"
             onClick={() => setCollapsed((prev) => !prev)}
           />
           <UserMenu />
         </Layout.Header>
-        {/* Jarak antar-blok halaman diatur sekali di sini. */}
-        <Layout.Content className="flex flex-col gap-6 p-4 md:p-8">{children}</Layout.Content>
+        {/* Jarak antar-blok halaman diatur sekali di sini. Bawah mobile diberi ruang untuk dock. */}
+        <Layout.Content className="flex flex-col gap-6 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:px-8 md:pt-8 lg:pb-8">
+          {children}
+        </Layout.Content>
       </Layout>
+
+      <MobileDock />
     </Layout>
   );
 }

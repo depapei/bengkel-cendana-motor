@@ -45,29 +45,29 @@ export function CustomerManager() {
           </>
         }
       >
-      <DataView<Customer>
-        view={view}
-        loading={isFetching}
-        dataSource={data?.items}
-        pagination={pagination(data?.total)}
-        renderItem={(customer) => <CustomerCard customer={customer} />}
-        columns={[
-          {
-            title: "Nama",
-            dataIndex: "name",
-            render: (name: string, customer) => (
-              <Link href={buildUrl(AppRoute.CustomerDetail, { id: customer.id })}>{name}</Link>
-            ),
-          },
-          { title: "Nomor HP", dataIndex: "phoneNumber" },
-          {
-            title: "Kendaraan",
-            key: "vehicles",
-            render: (_, customer) =>
-              customer.vehicles.map((vehicle) => <VehicleLabel key={vehicle.id} vehicle={vehicle} variant="tag" />),
-          },
-        ]}
-      />
+        <DataView<Customer>
+          view={view}
+          loading={isFetching}
+          dataSource={data?.items}
+          pagination={pagination(data?.total)}
+          renderItem={(customer) => <CustomerCard customer={customer} />}
+          columns={[
+            {
+              title: "Nama",
+              dataIndex: "name",
+              render: (name: string, customer) => (
+                <Link href={buildUrl(AppRoute.CustomerDetail, { id: customer.id })}>{name}</Link>
+              ),
+            },
+            { title: "Nomor HP", dataIndex: "phoneNumber" },
+            {
+              title: "Kendaraan",
+              key: "vehicles",
+              render: (_, customer) =>
+                customer.vehicles.map((vehicle) => <VehicleLabel key={vehicle.id} vehicle={vehicle} variant="tag" />),
+            },
+          ]}
+        />
       </TableCard>
       {modal.render(<CustomerFormModal withVehicle onClose={modal.close} />)}
     </>

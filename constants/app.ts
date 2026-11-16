@@ -28,3 +28,6 @@ export const DATE_FORMAT = "DD MMM YYYY";
 export const DATE_ONLY_FORMAT = "YYYY-MM-DD";
 export const MILEAGE_UNIT = "km";
 export const DATE_TIME_FORMAT = "DD MMM YYYY HH:mm";
+
+/** Sama dengan breakpoint `lg` Tailwind: di bawah lebar ini aplikasi memakai layout mobile. */
+export const MOBILE_MEDIA_QUERY = "(max-width: 1023.98px)";

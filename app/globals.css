@@ -11,6 +11,8 @@
 
 body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  /* Tanpa kotak abu-abu bawaan browser mobile saat elemen di-tap. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media print {

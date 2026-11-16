@@ -10,11 +10,10 @@ interface DataViewProps<T extends { id: string }> extends DataGridProps<T> {
   columns: TableProps<T>["columns"];
 }
 
-/** Menampilkan data sebagai grid card atau tabel sesuai `view`. */
-export function DataView<T extends { id: string }>({ view, columns, renderItem, dataSource, loading, pagination }: DataViewProps<T>) {
-  if (view === ViewMode.Card) {
-    return <DataGrid<T> dataSource={dataSource} loading={loading} pagination={pagination} renderItem={renderItem} />;
-  }
+/** Menampilkan data sebagai grid card atau tabel sesuai `view`. Di mobile selalu grid card. */
+export function DataView<T extends { id: string }>({ view, columns, ...gridProps }: DataViewProps<T>) {
+  if (view === ViewMode.Card) return <DataGrid<T> {...gridProps} />;
 
-  return <DataTable<T> dataSource={dataSource} loading={loading} pagination={pagination} columns={columns} />;
+  const { renderItem, footer, ...tableProps } = gridProps;
+  return <DataTable<T> {...tableProps} columns={columns} renderItem={renderItem} cardFooter={footer} />;
 }

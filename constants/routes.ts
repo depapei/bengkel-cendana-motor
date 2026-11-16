@@ -14,6 +14,8 @@ export enum AppRoute {
   Mechanics = "/mechanics",
   Reports = "/reports",
   Users = "/users",
+  /** Akun & menu yang tidak muat di floating dock mobile. */
+  Settings = "/settings",
   /** Papan antrean servis untuk customer (tanpa login). */
   Queue = "/antrean",
 }

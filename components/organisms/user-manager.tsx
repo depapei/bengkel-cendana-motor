@@ -1,11 +1,11 @@
 "use client";
 
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Result, Space } from "antd";
+import { Button, Result } from "antd";
 import { IconButton } from "@/components/atoms/icon-button";
 import { StatusTag } from "@/components/atoms/status-tag";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
-import { DataTable } from "@/components/molecules/data-table";
+import { actionColumn, DataTable } from "@/components/molecules/data-table";
 import { PageHeader } from "@/components/molecules/page-header";
 import { TableCard } from "@/components/molecules/table-card";
 import { MESSAGE } from "@/constants/messages";
@@ -37,20 +37,17 @@ export function UserManager() {
         }
       />
       <TableCard>
-      <DataTable<User>
-        loading={isLoading}
-        dataSource={data}
-        pagination={false}
-        columns={[
-          { title: "Nama", dataIndex: "name" },
-          { title: "Username", dataIndex: "username" },
-          { title: "Role", dataIndex: "role", render: (role: User["role"]) => <StatusTag value={role} meta={USER_ROLE_META} /> },
-          { title: "Dibuat", dataIndex: "createdAt", render: formatDate },
-          {
-            title: "Aksi",
-            width: 120,
-            render: (_, user) => (
-              <Space>
+        <DataTable<User>
+          loading={isLoading}
+          dataSource={data}
+          pagination={false}
+          columns={[
+            { title: "Nama", dataIndex: "name" },
+            { title: "Username", dataIndex: "username" },
+            { title: "Role", dataIndex: "role", render: (role: User["role"]) => <StatusTag value={role} meta={USER_ROLE_META} /> },
+            { title: "Dibuat", dataIndex: "createdAt", render: formatDate },
+            actionColumn((user) => (
+              <>
                 <IconButton label="Ubah user" icon={<EditOutlined />} onClick={() => modal.show(user)} />
                 <ConfirmButton
                   label="Hapus user"
@@ -58,11 +55,10 @@ export function UserManager() {
                   disabled={user.id === me?.id}
                   onConfirm={() => remove.mutate(user.id)}
                 />
-              </Space>
-            ),
-          },
-        ]}
-      />
+              </>
+            )),
+          ]}
+        />
       </TableCard>
       {modal.render(<UserFormModal record={modal.record} onClose={modal.close} />)}
     </>

@@ -2,12 +2,13 @@
 
 import { useRouter } from "nextjs-toploader/app";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Select, Space } from "antd";
+import { Button, Select, Space } from "antd";
 import { IconButton } from "@/components/atoms/icon-button";
 import { ConfirmButton } from "@/components/molecules/confirm-button";
-import { DataTable } from "@/components/molecules/data-table";
+import { actionColumn, DataTable } from "@/components/molecules/data-table";
 import { PageHeader } from "@/components/molecules/page-header";
 import { QueryState } from "@/components/molecules/query-state";
+import { TableCard } from "@/components/molecules/table-card";
 import { AppRoute } from "@/constants/routes";
 import { useCustomer, useDeleteCustomer, useDeleteVehicle } from "@/hooks/queries/use-customers";
 import { useListParams } from "@/hooks/use-list-params";
@@ -54,7 +55,14 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
       />
 
       <Space orientation="vertical" size="large" className="w-full">
-        <Card title="Kendaraan" extra={<Button size="large" icon={<PlusOutlined />} onClick={() => vehicleModal.show()}>Tambah</Button>}>
+        <TableCard
+          title="Kendaraan"
+          extra={
+            <Button size="large" icon={<PlusOutlined />} onClick={() => vehicleModal.show()}>
+              Tambah
+            </Button>
+          }
+        >
           <DataTable<Vehicle>
             dataSource={customer.vehicles}
             pagination={false}
@@ -62,21 +70,17 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
               { title: "Plat Nomor", dataIndex: "platNomor" },
               { title: "Merek", key: "brand", render: (_, vehicle) => `${vehicle.brand.name} ${vehicle.brand.type}` },
               { title: "Terdaftar", dataIndex: "createdAt", render: formatDate },
-              {
-                title: "Aksi",
-                width: 120,
-                render: (_, vehicle) => (
-                  <Space>
-                    <IconButton label="Ubah kendaraan" icon={<EditOutlined />} onClick={() => vehicleModal.show(vehicle)} />
-                    <ConfirmButton label="Hapus kendaraan" confirmTitle="Hapus kendaraan ini?" onConfirm={() => removeVehicle.mutate(vehicle.id)} />
-                  </Space>
-                ),
-              },
+              actionColumn((vehicle) => (
+                <>
+                  <IconButton label="Ubah kendaraan" icon={<EditOutlined />} onClick={() => vehicleModal.show(vehicle)} />
+                  <ConfirmButton label="Hapus kendaraan" confirmTitle="Hapus kendaraan ini?" onConfirm={() => removeVehicle.mutate(vehicle.id)} />
+                </>
+              )),
             ]}
           />
-        </Card>
+        </TableCard>
 
-        <Card
+        <TableCard
           title="Riwayat Servis"
           extra={
             <Select
@@ -90,7 +94,7 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
           }
         >
           <OrderTable params={history.params} pagination={history.pagination} hideCustomer />
-        </Card>
+        </TableCard>
       </Space>
 
       {customerModal.render(<CustomerFormModal record={customer} onClose={customerModal.close} />)}

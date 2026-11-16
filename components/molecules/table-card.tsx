@@ -12,16 +12,25 @@ interface TableCardProps {
   className?: string;
 }
 
-/** Kartu pembungkus tabel dengan toolbar opsional. */
-export function TableCard({ title, extra, toolbar, children, className }: TableCardProps) {
+/**
+ * Kartu pembungkus tabel dengan toolbar opsional. Di mobile kartunya "lebur" ke halaman
+ * (tanpa border/latar/padding), jadi daftar card tidak terbungkus sub-section tambahan.
+ */
+export function TableCard({ title, extra, toolbar, children, className = "" }: TableCardProps) {
   return (
-    <Card title={title} extra={extra} className={className} styles={{ body: { padding: 0 } }}>
+    <Card
+      title={title}
+      extra={extra}
+      className={`max-lg:rounded-none max-lg:border-0 max-lg:bg-transparent max-lg:shadow-none ${className}`}
+      classNames={{ header: "max-lg:min-h-0 max-lg:border-0 max-lg:px-0 max-lg:pb-3" }}
+      styles={{ body: { padding: 0 } }}
+    >
       {toolbar && (
-        <Flex gap={12} wrap align="center" className="px-6 pt-5 pb-1">
+        <Flex gap={12} wrap align="center" className="pb-3 lg:px-6 lg:pt-5 lg:pb-1">
           {toolbar}
         </Flex>
       )}
-      <div className="p-2">{children}</div>
+      <div className="lg:p-2">{children}</div>
     </Card>
   );
 }
