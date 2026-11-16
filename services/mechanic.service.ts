@@ -1,9 +1,9 @@
 import { ApiEndpoint } from "@/constants/api-endpoints";
-import { api } from "@/lib/axios";
-import type { MechanicInput } from "@/schemas/mechanic.schema";
+import type { MechanicInput, MechanicUpdateInput } from "@/schemas/mechanic.schema";
 import type { Mechanic } from "@/types/models";
+import { createCrudService } from "./crud.service";
 
-export const mechanicService = {
-  list: () => api.get<Mechanic[]>(ApiEndpoint.Mechanics).then((res) => res.data),
-  create: (input: MechanicInput) => api.post<Mechanic>(ApiEndpoint.Mechanics, input).then((res) => res.data),
-};
+export const mechanicService = createCrudService<Mechanic, Mechanic[], MechanicInput, MechanicUpdateInput>({
+  list: ApiEndpoint.Mechanics,
+  detail: ApiEndpoint.MechanicDetail,
+});

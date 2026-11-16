@@ -9,6 +9,7 @@ import {
   DashboardOutlined,
   FileTextOutlined,
   TeamOutlined,
+  ToolOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu, type MenuProps } from "antd";
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { route: AppRoute.Customers, label: "Customer", icon: <TeamOutlined /> },
   { route: AppRoute.SpareParts, label: "Sparepart", icon: <AppstoreOutlined /> },
   { route: AppRoute.Brands, label: "Merek Motor", icon: <CarOutlined /> },
+  { route: AppRoute.Mechanics, label: "Mekanik", icon: <ToolOutlined /> },
   { route: AppRoute.Reports, label: "Laporan", icon: <BarChartOutlined />, adminOnly: true },
   { route: AppRoute.Users, label: "User", icon: <UserOutlined />, adminOnly: true },
 ];

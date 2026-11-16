@@ -16,6 +16,7 @@ export enum ApiEndpoint {
   BrandDetail = "/brands/:id",
 
   Mechanics = "/mechanics",
+  MechanicDetail = "/mechanics/:id",
 
   SpareParts = "/spare-parts",
   SparePartDetail = "/spare-parts/:id",

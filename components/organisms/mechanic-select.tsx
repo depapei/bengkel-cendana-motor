@@ -18,7 +18,8 @@ export function MechanicSelect({
       allowClear
       placeholder="Pilih mekanik"
       loading={isLoading}
-      options={data.map((mechanic) => ({
+      // Mekanik nonaktif disembunyikan, kecuali yang sudah terpilih di order ini.
+      options={data.filter((mechanic) => mechanic.isActive || mechanic.id === props.value).map((mechanic) => ({
         value: mechanic.id,
         label: mechanic.name,
       }))}

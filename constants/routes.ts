@@ -11,6 +11,7 @@ export enum AppRoute {
   SpareParts = "/spare-parts",
   SparePartDetail = "/spare-parts/:id",
   Brands = "/brands",
+  Mechanics = "/mechanics",
   Reports = "/reports",
   Users = "/users",
   /** Papan antrean servis untuk customer (tanpa login). */

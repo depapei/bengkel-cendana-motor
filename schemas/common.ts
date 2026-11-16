@@ -16,10 +16,19 @@ export const optionalString = () =>
     .nullish()
     .transform((value) => value || null);
 
+const PHONE_PATTERN = /^08\d{7,12}$/;
+const PHONE_INVALID = "Nomor HP tidak valid (contoh: 0812xxxxxxx)";
+
 export const phoneNumber = () =>
   requiredString("Nomor HP")
     .transform(normalizePhone)
-    .refine((value) => /^08\d{7,12}$/.test(value), "Nomor HP tidak valid (contoh: 0812xxxxxxx)");
+    .refine((value) => PHONE_PATTERN.test(value), PHONE_INVALID);
+
+/** Nomor HP opsional. Kosong → null. */
+export const optionalPhoneNumber = () =>
+  optionalString()
+    .transform((value) => value && normalizePhone(value))
+    .refine((value) => value === null || PHONE_PATTERN.test(value), PHONE_INVALID);
 
 export const platNomor = () =>
   requiredString("Plat nomor")
