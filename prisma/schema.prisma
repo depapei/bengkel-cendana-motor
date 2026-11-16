@@ -137,8 +137,11 @@ model SparePart {
 }
 
 model Mechanic {
-  id   String @id @default(uuid(7))
-  name String @unique
+  id          String  @id @default(uuid(7))
+  name        String  @unique
+  phoneNumber String?
+  /// Mekanik nonaktif tidak bisa dipilih untuk order baru, riwayat order tetap utuh.
+  isActive    Boolean @default(true)
 
   orders Order[]
 

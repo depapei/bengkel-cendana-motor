@@ -20,6 +20,8 @@ export interface Brand extends Timestamps {
 export interface Mechanic extends Timestamps {
   id: string;
   name: string;
+  phoneNumber: string | null;
+  isActive: boolean;
 }
 
 export interface Vehicle extends Timestamps {
