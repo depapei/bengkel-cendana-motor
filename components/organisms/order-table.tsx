@@ -18,7 +18,8 @@ import { buildUrl } from "@/utils/url";
 
 interface OrderTableProps {
   params: OrderListParams;
-  pagination: (total?: number) => TablePaginationConfig;
+  /** Tanpa `pagination` → semua item `params` ditampilkan tanpa pagination. */
+  pagination?: (total?: number) => TablePaginationConfig;
   /** Sembunyikan kolom customer (misal di halaman detail customer). */
   hideCustomer?: boolean;
   /** Tampilan daftar (default tabel). */
@@ -33,7 +34,7 @@ export function OrderTable({ params, pagination, hideCustomer, view = ViewMode.T
       view={view}
       loading={isFetching}
       dataSource={data?.items}
-      pagination={pagination(data?.total)}
+      pagination={pagination ? pagination(data?.total) : false}
       renderItem={(order) => <OrderCard order={order} hideCustomer={hideCustomer} />}
       columns={[
         {
