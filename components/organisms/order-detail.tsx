@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { DollarOutlined, PrinterOutlined } from "@ant-design/icons";
 import { Alert, Button, Flex } from "antd";
-import { StatusTag } from "@/components/atoms/status-tag";
 import { PageHeader } from "@/components/molecules/page-header";
 import { QueryState } from "@/components/molecules/query-state";
-import { ORDER_STATUS_META, OrderStatus } from "@/constants/order-status";
-import { PAYMENT_STATUS_META, PaymentStatus } from "@/constants/payment";
+import { OrderStatus } from "@/constants/order-status";
+import { PaymentStatus } from "@/constants/payment";
 import { AppRoute } from "@/constants/routes";
 import { useOrder } from "@/hooks/queries/use-orders";
 import { useModalState } from "@/hooks/use-modal-state";
@@ -34,12 +33,6 @@ function OrderDetailView({ order }: { order: OrderDetailData }) {
       <PageHeader
         title={order.orderNo}
         backHref={AppRoute.Orders}
-        subtitle={
-          <Flex gap={4} className="mt-1">
-            <StatusTag value={order.status} meta={ORDER_STATUS_META} />
-            <StatusTag value={order.paymentStatus} meta={PAYMENT_STATUS_META} />
-          </Flex>
-        }
         extra={
           <>
             <OrderStatusActions order={order} shortageCount={shortages.length} />

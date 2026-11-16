@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { Card, Input, InputNumber, Typography } from "antd";
+import { StatusTag } from "@/components/atoms/status-tag";
 import { DateInput } from "@/components/molecules/date-input";
 import { InfoDescriptions } from "@/components/molecules/info-descriptions";
 import { InlineEdit } from "@/components/molecules/inline-edit";
 import { MILEAGE_UNIT } from "@/constants/app";
 import { MESSAGE } from "@/constants/messages";
-import { ITEM_EDITABLE_STATUSES } from "@/constants/order-status";
-import { PAYMENT_METHOD_META } from "@/constants/payment";
+import { ITEM_EDITABLE_STATUSES, ORDER_STATUS_META } from "@/constants/order-status";
+import { PAYMENT_METHOD_META, PAYMENT_STATUS_META } from "@/constants/payment";
 import { AppRoute } from "@/constants/routes";
 import { useUpdateOrder } from "@/hooks/queries/use-orders";
 import { orderSchema, type OrderInput } from "@/schemas/order.schema";
@@ -84,6 +85,8 @@ export function OrderInfoCard({ order }: { order: OrderDetail }) {
       <InfoDescriptions
         column={{ xs: 1, md: 2, lg: 3 }}
         items={[
+          { label: "Status pengerjaan", children: <StatusTag value={order.status} meta={ORDER_STATUS_META} /> },
+          { label: "Status pembayaran", children: <StatusTag value={order.paymentStatus} meta={PAYMENT_STATUS_META} /> },
           {
             label: "Customer",
             children: (
