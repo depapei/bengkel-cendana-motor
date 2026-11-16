@@ -69,7 +69,7 @@ export function InlineEdit<T>({ value, display, editable = true, loading, valida
           tabIndex={0}
           onClick={start}
           onKeyDown={(event) => (event.key === "Enter" || event.key === " ") && start()}
-          className="group -mx-2 -my-1 flex w-full cursor-pointer items-start gap-2 rounded px-2 py-1 transition-all hover:mt-1 hover:border hover:border-primary dark:hover:bg-white/10 rounded-lg"
+          className="group -mx-2 -my-1 flex w-full cursor-pointer items-start gap-2 rounded px-2 py-1 transition-all hover:border hover:border-primary dark:hover:bg-white/10 rounded-lg"
         >
           <span className="flex-1 whitespace-pre-wrap">{content}</span>
           <EditOutlined className="mt-1 opacity-0 transition-opacity group-hover:opacity-60" />
