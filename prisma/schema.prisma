@@ -119,9 +119,11 @@ model CustomerVehicle {
 
 model SparePart {
   id    String @id @default(uuid(7))
-  name  String
-  price Int
-  stock Int    @default(0) // CHECK (stock >= 0) ditambahkan di migration
+  name          String
+  price         Int // harga jual per unit
+  /// Harga beli (modal) per unit. Null = data lama yang belum diisi → belum ikut perhitungan laba.
+  purchasePrice Int?
+  stock         Int    @default(0) // CHECK (stock >= 0) ditambahkan di migration
 
   serviceFees    ServiceFee[]
   stockMovements StockMovement[]
@@ -168,6 +170,8 @@ model Order {
   nextServiceDate   DateTime?      @db.Date
   nextServiceNote   String?
   totalPrice        Int            @default(0)
+  /// Modal sparepart (Σ qty × sparepartCost). Null = ada sparepart yang harga belinya belum diketahui.
+  totalCost         Int?           @default(0)
   status            OrderStatus    @default(draft)
   cancelReason      String?
   paymentStatus     PaymentStatus  @default(unpaid)
@@ -206,6 +210,8 @@ model ServiceFee {
   name           String
   qty            Int     @default(1)
   sparepartPrice Int     @default(0)
+  /// Snapshot harga beli sparepart per unit. 0 untuk jasa saja, null bila harga beli belum diisi.
+  sparepartCost  Int?    @default(0)
   laborPrice     Int     @default(0)
   subtotal       Int     @default(0)
 

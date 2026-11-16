@@ -13,6 +13,9 @@ export const MESSAGE = {
   invalidLogin: "Username atau password salah",
   required: (label: string) => `${label} wajib diisi`,
   mechanicRequired: "Tugaskan mekanik terlebih dahulu",
+  purchasePriceMissing: "Belum diisi",
+  unknownCostOrders: (count: number) =>
+    `${count} order lunas belum masuk perhitungan laba karena harga beli sparepart-nya belum diisi`,
 } as const;
 
 /** Nama kolom unik → label untuk pesan duplikat. */

@@ -37,6 +37,8 @@ export interface ReportOrder {
   status: OrderStatus;
   paymentStatus: PaymentStatus;
   totalPrice: number;
+  /** Modal sparepart; null = ada sparepart yang harga belinya belum diisi. */
+  totalCost: number | null;
   customer: { name: string };
   customerVehicle: { platNomor: string };
 }
@@ -44,6 +46,12 @@ export interface ReportOrder {
 export interface OrderReportSummary {
   totalPrice: number;
   paidTotal: number;
+  /** Modal sparepart order lunas yang modalnya sudah diketahui. */
+  paidCost: number;
+  /** Laba kotor order lunas (total − modal), hanya order yang modalnya sudah diketahui. */
+  paidProfit: number;
+  /** Order lunas yang belum ikut dihitung labanya. */
+  unknownCostCount: number;
 }
 
 export interface ReportStockMovement {

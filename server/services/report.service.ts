@@ -23,6 +23,7 @@ const REPORT_ORDER_SELECT = {
   status: true,
   paymentStatus: true,
   totalPrice: true,
+  totalCost: true,
   customer: { select: { name: true } },
   customerVehicle: { select: { platNomor: true } },
 } satisfies Prisma.OrderSelect;
@@ -56,16 +57,30 @@ function stockWhere(filter: StockReportFilter): Prisma.StockMovementWhereInput {
 }
 
 /** Query ringkasan order (dipakai di transaksi list & export). */
-const orderSummaryQueries = (where: Prisma.OrderWhereInput) =>
-  [
+function orderSummaryQueries(where: Prisma.OrderWhereInput) {
+  const paid: Prisma.OrderWhereInput = { AND: [where, { paymentStatus: PaymentStatus.paid }] };
+  return [
     db.order.aggregate({ where, _sum: { totalPrice: true } }),
-    db.order.aggregate({ where: { AND: [where, { paymentStatus: PaymentStatus.paid }] }, _sum: { totalPrice: true } }),
+    db.order.aggregate({ where: paid, _sum: { totalPrice: true } }),
+    // Laba hanya dari order lunas yang modal sparepart-nya sudah diketahui.
+    db.order.aggregate({ where: { AND: [paid, { totalCost: { not: null } }] }, _sum: { totalPrice: true, totalCost: true } }),
+    db.order.count({ where: { AND: [paid, { totalCost: null }] } }),
   ] as const;
+}
 
-const toOrderSummary = (
-  sum: { _sum: { totalPrice: number | null } },
-  paid: { _sum: { totalPrice: number | null } },
-): OrderReportSummary => ({ totalPrice: sum._sum.totalPrice ?? 0, paidTotal: paid._sum.totalPrice ?? 0 });
+type PriceSum = { _sum: { totalPrice: number | null } };
+type CostSum = { _sum: { totalPrice: number | null; totalCost: number | null } };
+
+function toOrderSummary([sum, paid, costed, unknownCostCount]: readonly [PriceSum, PriceSum, CostSum, number]): OrderReportSummary {
+  const paidCost = costed._sum.totalCost ?? 0;
+  return {
+    totalPrice: sum._sum.totalPrice ?? 0,
+    paidTotal: paid._sum.totalPrice ?? 0,
+    paidCost,
+    paidProfit: (costed._sum.totalPrice ?? 0) - paidCost,
+    unknownCostCount,
+  };
+}
 
 const stockSummaryQueries = (where: Prisma.StockMovementWhereInput) =>
   [
@@ -86,12 +101,12 @@ function assertExportable(total: number) {
 
 export async function getOrderReport(query: OrderReportQuery) {
   const where = orderWhere(query);
-  const [items, total, sum, paid] = await db.$transaction([
+  const [items, total, ...summary] = await db.$transaction([
     db.order.findMany({ where, select: REPORT_ORDER_SELECT, orderBy: ORDER_BY_NEWEST, ...toSkipTake(query) }),
     db.order.count({ where }),
     ...orderSummaryQueries(where),
   ]);
-  return toReportPage(items, total, toOrderSummary(sum, paid));
+  return toReportPage(items, total, toOrderSummary(summary));
 }
 
 export async function getStockReport(query: StockReportQuery) {
@@ -109,11 +124,11 @@ export async function getStockReport(query: StockReportQuery) {
 export async function getOrderReportRows(filter: OrderReportFilter) {
   const where = orderWhere(filter);
   assertExportable(await db.order.count({ where }));
-  const [items, sum, paid] = await db.$transaction([
+  const [items, ...summary] = await db.$transaction([
     db.order.findMany({ where, select: REPORT_ORDER_SELECT, orderBy: ORDER_BY_NEWEST }),
     ...orderSummaryQueries(where),
   ]);
-  return { items, summary: toOrderSummary(sum, paid) };
+  return { items, summary: toOrderSummary(summary) };
 }
 
 export async function getStockReportRows(filter: StockReportFilter) {

@@ -174,18 +174,41 @@ function assertEditable(order: OrderRow) {
   }
 }
 
-async function recalcTotal(tx: Tx, orderId: string, userId: string) {
-  const { _sum } = await tx.serviceFee.aggregate({ where: { orderId, ...notDeleted }, _sum: { subtotal: true } });
-  await tx.order.update({ where: { id: orderId }, data: { totalPrice: _sum.subtotal ?? 0, ...auditUpdate(userId) } });
+/**
+ * Hitung ulang total harga & modal sparepart order dari item aktif — satu query untuk banyak order.
+ * - totalPrice = Σ subtotal
+ * - totalCost  = Σ qty × sparepartCost item sparepart; NULL bila ada yang harga belinya belum diketahui
+ */
+export async function recalcOrderTotals(tx: Tx, orderIds: readonly string[], userId: string) {
+  if (orderIds.length === 0) return;
+  await tx.$executeRaw`
+    UPDATE "orders" o SET
+      "totalPrice" = (
+        SELECT COALESCE(SUM(sf."subtotal"), 0) FROM "service_fees" sf
+        WHERE sf."orderId" = o."id" AND sf."deletedAt" IS NULL
+      ),
+      "totalCost" = (
+        SELECT CASE WHEN BOOL_OR(sf."sparepartCost" IS NULL) THEN NULL ELSE COALESCE(SUM(sf."qty" * sf."sparepartCost"), 0) END
+        FROM "service_fees" sf
+        WHERE sf."orderId" = o."id" AND sf."deletedAt" IS NULL AND sf."sparepartId" IS NOT NULL
+      ),
+      "updatedAt" = NOW(),
+      "updatedBy" = ${userId}
+    WHERE o."id" IN (${Prisma.join(orderIds)})
+  `;
 }
 
 // ---------------------------------------------------------------- items (ServiceFee)
 
-async function sparePartPrice(tx: Tx, sparepartId: string | null) {
-  if (!sparepartId) return 0;
-  const part = await tx.sparePart.findFirst({ where: { id: sparepartId, ...notDeleted }, select: { price: true } });
+/** Snapshot harga jual & harga beli sparepart saat item ditambahkan (jasa saja → 0). */
+async function sparePartSnapshot(tx: Tx, sparepartId: string | null) {
+  if (!sparepartId) return { sparepartPrice: 0, sparepartCost: 0 };
+  const part = await tx.sparePart.findFirst({
+    where: { id: sparepartId, ...notDeleted },
+    select: { price: true, purchasePrice: true },
+  });
   if (!part) throw notFound("Sparepart");
-  return part.price;
+  return { sparepartPrice: part.price, sparepartCost: part.purchasePrice };
 }
 
 async function findItem(tx: Tx, orderId: string, itemId: string) {
@@ -204,20 +227,20 @@ async function mutateItems(
     const order = await lockOrder(tx, orderId);
     assertEditable(order);
     await mutate(tx, order, isStockCommitted(order.status));
-    await recalcTotal(tx, orderId, userId);
+    await recalcOrderTotals(tx, [orderId], userId);
   });
   return getOrder(orderId);
 }
 
 export function addItem(orderId: string, data: ServiceFeeData, userId: string) {
   return mutateItems(orderId, userId, async (tx, order, stockCommitted) => {
-    const price = await sparePartPrice(tx, data.sparepartId);
+    const snapshot = await sparePartSnapshot(tx, data.sparepartId);
     await tx.serviceFee.create({
       data: {
         ...data,
+        ...snapshot,
         orderId,
-        sparepartPrice: price,
-        subtotal: calcSubtotal(data.qty, price, data.laborPrice),
+        subtotal: calcSubtotal(data.qty, snapshot.sparepartPrice, data.laborPrice),
         ...auditCreate(userId),
       },
     });
@@ -231,8 +254,10 @@ export function updateItem(orderId: string, itemId: string, data: ServiceFeeData
   return mutateItems(orderId, userId, async (tx, order, stockCommitted) => {
     const item = await findItem(tx, orderId, itemId);
     const samePart = item.sparepartId === data.sparepartId;
-    // Harga snapshot dipertahankan selama sparepart tidak diganti (Spesifikasi §5).
-    const price = samePart ? item.sparepartPrice : await sparePartPrice(tx, data.sparepartId);
+    // Harga jual & beli snapshot dipertahankan selama sparepart tidak diganti (Spesifikasi §5).
+    const snapshot = samePart
+      ? { sparepartPrice: item.sparepartPrice, sparepartCost: item.sparepartCost }
+      : await sparePartSnapshot(tx, data.sparepartId);
 
     if (stockCommitted) {
       const stock = { orderId, userId, note: STOCK_NOTE.itemChanged(order.orderNo) };
@@ -248,8 +273,8 @@ export function updateItem(orderId: string, itemId: string, data: ServiceFeeData
       where: { id: itemId },
       data: {
         ...data,
-        sparepartPrice: price,
-        subtotal: calcSubtotal(data.qty, price, data.laborPrice),
+        ...snapshot,
+        subtotal: calcSubtotal(data.qty, snapshot.sparepartPrice, data.laborPrice),
         ...auditUpdate(userId),
       },
     });

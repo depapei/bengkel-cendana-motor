@@ -4,9 +4,10 @@ import { StockMovementType, STOCK_NOTE } from "@/constants/stock-movement";
 import type { ListQuery } from "@/schemas/list.schema";
 import type { SparePartCreateData, SparePartData, StockMovementData } from "@/schemas/spare-part.schema";
 import { auditCreate, auditDelete, auditUpdate, notDeleted } from "../audit";
-import { db } from "../db";
+import { db, type Tx } from "../db";
 import { notFound } from "../http/errors";
 import { toPaginated, toSkipTake } from "../pagination";
+import { recalcOrderTotals } from "./order.service";
 import { addStock, adjustStock } from "./stock.service";
 
 const ENTITY = "Sparepart";
@@ -37,10 +38,26 @@ export async function createSparePart({ stock, ...data }: SparePartCreateData, u
   });
 }
 
+/**
+ * Item order lama yang modalnya belum diketahui (dibuat sebelum harga beli diisi) memakai harga beli
+ * ini, lalu modal & laba order terkait dihitung ulang. Snapshot yang sudah ada tidak diubah.
+ */
+async function backfillItemCost(tx: Tx, sparepartId: string, purchasePrice: number, userId: string) {
+  const where = { sparepartId, sparepartCost: null, ...notDeleted };
+  const orders = await tx.serviceFee.findMany({ where, select: { orderId: true }, distinct: ["orderId"] });
+  if (orders.length === 0) return;
+  await tx.serviceFee.updateMany({ where, data: { sparepartCost: purchasePrice, ...auditUpdate(userId) } });
+  await recalcOrderTotals(tx, orders.map((order) => order.orderId), userId);
+}
+
 /** Stok tidak diubah di sini — wajib lewat pergerakan stok agar tercatat. */
 export async function updateSparePart(id: string, data: SparePartData, userId: string) {
   await getSparePart(id);
-  return db.sparePart.update({ where: { id }, data: { ...data, ...auditUpdate(userId) } });
+  return db.$transaction(async (tx) => {
+    const part = await tx.sparePart.update({ where: { id }, data: { ...data, ...auditUpdate(userId) } });
+    await backfillItemCost(tx, id, data.purchasePrice, userId);
+    return part;
+  });
 }
 
 export async function deleteSparePart(id: string, userId: string) {

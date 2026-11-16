@@ -38,11 +38,11 @@ const BRAND_TYPES: Record<string, string[]> = {
 const BRANDS = Object.entries(BRAND_TYPES).flatMap(([name, types]) => types.map((type) => ({ name, type })));
 
 const SPARE_PARTS = [
-  { name: "Oli Mesin MPX2 0.8L", price: 55000, stock: 20 },
-  { name: "Oli Gardan", price: 18000, stock: 15 },
-  { name: "Kampas Rem Depan", price: 45000, stock: 10 },
-  { name: "Busi NGK", price: 25000, stock: 12 },
-  { name: "V-Belt Vario 125", price: 135000, stock: 4 },
+  { name: "Oli Mesin MPX2 0.8L", purchasePrice: 45000, price: 55000, stock: 20 },
+  { name: "Oli Gardan", purchasePrice: 13000, price: 18000, stock: 15 },
+  { name: "Kampas Rem Depan", purchasePrice: 35000, price: 45000, stock: 10 },
+  { name: "Busi NGK", purchasePrice: 18000, price: 25000, stock: 12 },
+  { name: "V-Belt Vario 125", purchasePrice: 110000, price: 135000, stock: 4 },
 ];
 
 async function main() {

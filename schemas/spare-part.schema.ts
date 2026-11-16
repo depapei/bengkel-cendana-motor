@@ -4,6 +4,7 @@ import { money, optionalString, requiredString } from "./common";
 
 export const sparePartSchema = z.object({
   name: requiredString("Nama sparepart"),
+  purchasePrice: money("Harga beli"),
   price: money("Harga jual"),
 });
 

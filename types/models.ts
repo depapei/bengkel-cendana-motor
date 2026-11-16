@@ -43,6 +43,8 @@ export interface SparePart extends Timestamps {
   id: string;
   name: string;
   price: number;
+  /** Null = data lama yang belum diisi harga belinya. */
+  purchasePrice: number | null;
   stock: number;
 }
 

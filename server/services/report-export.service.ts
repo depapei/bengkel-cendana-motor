@@ -1,11 +1,13 @@
 import "server-only";
 import { ORDER_STATUS_META } from "@/constants/order-status";
 import { PAYMENT_STATUS_META } from "@/constants/payment";
+import { MESSAGE } from "@/constants/messages";
 import { EXPORT_FORMAT_META, ExportFormat, REPORT_TITLE, ReportKind } from "@/constants/report";
 import { STOCK_MOVEMENT_TYPE_META } from "@/constants/stock-movement";
 import type { OrderExportQuery, StockExportQuery } from "@/schemas/report.schema";
 import type { EnumMeta } from "@/types/common";
 import { formatDate, formatDateTime, formatRupiah } from "@/utils/format";
+import { calcProfit } from "@/utils/order";
 import { reportFileName } from "@/utils/report";
 import { buildPdf } from "../export/pdf";
 import type { ExportColumn, ExportDocument } from "../export/types";
@@ -17,6 +19,8 @@ type OrderRow = Row<typeof getOrderReportRows>;
 type MovementRow = Row<typeof getStockReportRows>;
 
 const ALL_LABEL = "Semua";
+/** Modal / laba yang belum bisa dihitung. */
+const EMPTY_CELL = "-";
 
 const ORDER_COLUMNS: ExportColumn<OrderRow>[] = [
   { header: "No. Order", width: 20, value: (row) => row.orderNo },
@@ -26,6 +30,8 @@ const ORDER_COLUMNS: ExportColumn<OrderRow>[] = [
   { header: "Status", width: 12, value: (row) => ORDER_STATUS_META[row.status].label },
   { header: "Pembayaran", width: 12, value: (row) => PAYMENT_STATUS_META[row.paymentStatus].label },
   { header: "Total", width: 16, value: (row) => row.totalPrice, money: true, align: "right" },
+  { header: "Modal", width: 16, value: (row) => row.totalCost ?? EMPTY_CELL, money: true, align: "right" },
+  { header: "Laba", width: 16, value: (row) => calcProfit(row.totalPrice, row.totalCost) ?? EMPTY_CELL, money: true, align: "right" },
 ];
 
 const MOVEMENT_COLUMNS: ExportColumn<MovementRow>[] = [
@@ -67,6 +73,9 @@ export async function exportOrderReport({ format, ...filter }: OrderExportQuery)
         { label: "Jumlah order", value: String(items.length) },
         { label: "Total nilai order", value: formatRupiah(summary.totalPrice) },
         { label: "Total lunas", value: formatRupiah(summary.paidTotal) },
+        { label: "Modal sparepart (lunas)", value: formatRupiah(summary.paidCost) },
+        { label: "Laba kotor (lunas)", value: formatRupiah(summary.paidProfit) },
+        ...(summary.unknownCostCount > 0 ? [{ label: "Catatan", value: MESSAGE.unknownCostOrders(summary.unknownCostCount) }] : []),
       ],
       columns: ORDER_COLUMNS,
       rows: items,

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Flex, Typography } from "antd";
+import { Alert, Flex, Typography } from "antd";
 import { Money } from "@/components/atoms/money";
 import { StatusTag } from "@/components/atoms/status-tag";
 import { DataView } from "@/components/molecules/data-view";
@@ -12,6 +12,7 @@ import { ReportOrderCard } from "@/components/molecules/report-order-card";
 import { StatCard } from "@/components/molecules/stat-card";
 import { TableCard } from "@/components/molecules/table-card";
 import { ViewModeToggle } from "@/components/molecules/view-mode-toggle";
+import { MESSAGE } from "@/constants/messages";
 import { ORDER_STATUS_META } from "@/constants/order-status";
 import { PAYMENT_STATUS_META } from "@/constants/payment";
 import { ReportKind } from "@/constants/report";
@@ -21,6 +22,7 @@ import { useExportReport, useOrderReport } from "@/hooks/queries/use-reports";
 import type { ListState } from "@/hooks/use-list-params";
 import type { OrderReportParams, ReportOrder } from "@/types/report";
 import { formatDateTime } from "@/utils/format";
+import { calcProfit } from "@/utils/order";
 import { buildUrl } from "@/utils/url";
 
 export function OrderReport({ list }: { list: ListState<OrderReportParams> }) {
@@ -31,11 +33,26 @@ export function OrderReport({ list }: { list: ListState<OrderReportParams> }) {
 
   return (
     <Flex vertical gap={16}>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
         <StatCard title="Jumlah Order" value={data?.total ?? 0} loading={!data} />
         <StatCard title="Total Nilai Order" value={data?.summary.totalPrice ?? 0} money loading={!data} />
         <StatCard title="Total Lunas" value={data?.summary.paidTotal ?? 0} money loading={!data} />
+        <StatCard title="Modal Sparepart (Lunas)" value={data?.summary.paidCost ?? 0} money loading={!data} />
+        <StatCard title="Laba Kotor (Lunas)" value={data?.summary.paidProfit ?? 0} money loading={!data} />
       </div>
+      {!!data?.summary.unknownCostCount && (
+        <Alert
+          type="warning"
+          showIcon
+          title={MESSAGE.unknownCostOrders(data.summary.unknownCostCount)}
+          description={
+            <>
+              Isi harga beli di menu <Link href={AppRoute.SpareParts}>Sparepart</Link> — modal & laba order lama otomatis
+              diperbarui.
+            </>
+          }
+        />
+      )}
       <TableCard
         toolbar={
           <Flex vertical gap={8} className="w-full">
@@ -96,6 +113,18 @@ export function OrderReport({ list }: { list: ListState<OrderReportParams> }) {
               dataIndex: "totalPrice",
               align: "right",
               render: (value: number) => <Money value={value} strong />,
+            },
+            {
+              title: "Modal",
+              dataIndex: "totalCost",
+              align: "right",
+              render: (value: number | null) => <Money value={value} emptyText="-" />,
+            },
+            {
+              title: "Laba",
+              key: "profit",
+              align: "right",
+              render: (_, order) => <Money value={calcProfit(order.totalPrice, order.totalCost)} emptyText="-" />,
             },
           ]}
         />

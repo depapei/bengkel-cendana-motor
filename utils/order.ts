@@ -7,6 +7,11 @@ export function calcSubtotal(qty: number, sparepartPrice: number, laborPrice: nu
   return qty * sparepartPrice + laborPrice;
 }
 
+/** Laba kotor order = total − modal sparepart. Null bila modal belum diketahui. */
+export function calcProfit(totalPrice: number, totalCost: number | null): number | null {
+  return totalCost === null ? null : totalPrice - totalCost;
+}
+
 /** Jumlahkan qty per sparepart (satu sparepart bisa muncul di beberapa item). */
 export function sumQtyBySparePart(items: readonly { sparepartId: string | null; qty: number }[]): Map<string, number> {
   const totals = new Map<string, number>();
