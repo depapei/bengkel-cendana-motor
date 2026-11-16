@@ -1,8 +1,9 @@
 "use client";
 
-import { Card, Descriptions, Empty, Flex, List, Modal, Typography } from "antd";
+import { Card, Empty, Flex, List, Modal, Typography } from "antd";
 import { StatusTag } from "@/components/atoms/status-tag";
 import { VehicleLabel } from "@/components/atoms/vehicle-label";
+import { InfoDescriptions } from "@/components/molecules/info-descriptions";
 import { QueryState } from "@/components/molecules/query-state";
 import { QueueProgress } from "@/components/molecules/queue-progress";
 import { QUEUE_STATUS_META } from "@/constants/order-status";
@@ -42,8 +43,7 @@ function QueueDetailContent({ order }: { order: QueueOrderDetail }) {
         <StatusTag value={order.status} meta={QUEUE_STATUS_META} />
       </Flex>
 
-      <Descriptions
-       
+      <InfoDescriptions
         column={{ xs: 1, sm: 2 }}
         items={[
           { label: "No. Order", children: order.orderNo },
@@ -80,10 +80,9 @@ function QueueDetailContent({ order }: { order: QueueOrderDetail }) {
       </div>
 
       {order.nextServiceDate && (
-        <Descriptions
-         
+        <InfoDescriptions
           title="Rekomendasi Servis Berikutnya"
-          column={1}
+          column={{ xs: 1, sm: 2 }}
           items={[
             { label: "Tanggal", children: formatDateOnly(order.nextServiceDate) },
             { label: "Catatan", children: order.nextServiceNote ?? "-" },
