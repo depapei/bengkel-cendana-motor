@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CheckOutlined, CloseOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Space, Tooltip, Typography } from "antd";
 import { IconButton } from "@/components/atoms/icon-button";
@@ -29,6 +29,8 @@ interface InlineEditProps<T> {
   renderInput: (props: InlineEditInputProps<T>) => ReactNode;
 }
 
+const POPUP_SELECTOR = ".ant-select-dropdown, .ant-picker-dropdown, .ant-dropdown, .ant-popover";
+
 /**
  * Field yang bisa diklik untuk langsung diubah di tempat:
  * teks → input + tombol simpan (Space.Compact).
@@ -37,6 +39,21 @@ export function InlineEdit<T>({ value, display, editable = true, loading, valida
   const [draft, setDraft] = useState<T>();
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState<string>();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Klik di luar komponen = batal edit. Popup AntD (Select/DatePicker) dirender lewat portal,
+  // jadi klik di dalamnya tidak dianggap "di luar".
+  useEffect(() => {
+    if (!editing || loading) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Element | null;
+      if (!target || containerRef.current?.contains(target)) return;
+      if (target.closest(POPUP_SELECTOR)) return;
+      setEditing(false);
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [editing, loading]);
 
   const content = display ?? (value as ReactNode);
   if (!editable) return <>{content}</>;
@@ -69,9 +86,12 @@ export function InlineEdit<T>({ value, display, editable = true, loading, valida
           tabIndex={0}
           onClick={start}
           onKeyDown={(event) => (event.key === "Enter" || event.key === " ") && start()}
-          className="group -mx-2 -my-1 flex w-full cursor-pointer items-start gap-2 rounded px-2 py-1 transition-all hover:border hover:border-primary dark:hover:bg-white/10 rounded-lg"
+          // Border selalu ada (transparan) agar hover tidak menggeser layout; margin negatif = padding + border,
+          // sehingga teks sejajar dengan label. Lebar = sel penuh (+ margin negatif) supaya sama dengan mode edit —
+          // parent bisa flex (mis. Descriptions), jadi lebar harus eksplisit, bukan auto.
+          className="group -mx-[9px] -my-[5px] flex w-[calc(100%+18px)] cursor-pointer items-start gap-2 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-primary dark:hover:bg-white/10"
         >
-          <span className="flex-1 whitespace-pre-wrap">{content}</span>
+          <span className="min-w-0 flex-1 whitespace-pre-wrap break-words">{content}</span>
           <EditOutlined className="mt-1 opacity-0 transition-opacity group-hover:opacity-60" />
         </div>
       </Tooltip>
@@ -79,12 +99,13 @@ export function InlineEdit<T>({ value, display, editable = true, loading, valida
   }
 
   return (
-    <div className="w-full" onKeyDown={(event) => event.key === "Escape" && cancel()}>
+    <div ref={containerRef} className="w-full min-w-0" onKeyDown={(event) => event.key === "Escape" && cancel()}>
       {/*
         Sudut kanan input dirapatkan manual: style compact AntD hanya ikut ter-load oleh <Input>,
         sehingga <Input.TextArea> di dalam Space.Compact tetap rounded di sisi kanan.
       */}
-      <Space.Compact block size="large" className="[&>:first-child]:rounded-e-none!">
+      {/* Input boleh menyusut (min-w-0) agar tombol tidak mendorong lebar melebihi sel. */}
+      <Space.Compact block size="large" className="[&>:first-child]:min-w-0 [&>:first-child]:flex-1 [&>:first-child]:rounded-e-none!">
 
         {renderInput({
           value: draft as T,

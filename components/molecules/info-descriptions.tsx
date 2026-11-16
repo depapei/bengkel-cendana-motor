@@ -15,7 +15,9 @@ export function InfoDescriptions({ className, styles, ...props }: Omit<Descripti
       colon={false}
       // Layout vertical: label ada di baris <th> sendiri dengan padding-bottom bawaan (16px);
       // styles.label hanya kena <span> di dalamnya → nolkan padding <th> agar label menempel ke data.
-      className={`[&_.ant-descriptions-row>th]:pb-0! ${className ?? ""}`}
+      // AntD memberi table `table-layout: fixed` tapi hanya `min-width: 100%` (width auto) → browser mengabaikan
+      // fixed layout & lebar kolom ikut konten (loncat saat InlineEdit dibuka). Width eksplisit = kolom rata & stabil.
+      className={`[&_.ant-descriptions-row>th]:pb-0! [&_table]:w-full ${className ?? ""}`}
       // Skala komponen large AntD: label = fontSize (14), data = fontSizeLG (16).
       styles={{
         label: { fontSize: token.fontSize, lineHeight: token.lineHeight, color: token.colorTextSecondary, paddingBottom: 0, marginBottom: 0 },
