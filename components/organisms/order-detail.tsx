@@ -47,12 +47,12 @@ function OrderDetailView({ order }: { order: OrderDetailData }) {
           <>
             <OrderStatusActions order={order} shortageCount={shortages.length} />
             {canPay && (
-              <Button type="primary" icon={<DollarOutlined />} onClick={() => paymentModal.show()}>
+              <Button size="large" type="primary" icon={<DollarOutlined />} onClick={() => paymentModal.show()}>
                 Catat Pembayaran
               </Button>
             )}
             <Link href={buildUrl(AppRoute.OrderInvoice, { id: order.id })} target="_blank">
-              <Button icon={<PrinterOutlined />}>Nota</Button>
+              <Button size="large" icon={<PrinterOutlined />}>Nota</Button>
             </Link>
           </>
         }

@@ -29,7 +29,7 @@ export function QuickAddRow({ onSubmit, loading, children }: QuickAddRowProps) {
   return (
     <Flex gap={8} align="flex-start" className="px-2 pt-2 pb-1" onKeyDown={handleKeyDown}>
       {children}
-      <Button type="primary" icon={<PlusOutlined />} loading={loading} onClick={onSubmit}>
+      <Button size="large" type="primary" icon={<PlusOutlined />} loading={loading} onClick={onSubmit}>
         Tambah
       </Button>
     </Flex>

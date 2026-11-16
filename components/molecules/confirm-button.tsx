@@ -20,7 +20,7 @@ export function ConfirmButton({
 }: ConfirmButtonProps) {
   return (
     <Popconfirm title={confirmTitle} onConfirm={onConfirm} okText="Ya" cancelText="Batal">
-      <Button danger={danger} icon={icon} {...buttonProps}>
+      <Button size="large" danger={danger} icon={icon} {...buttonProps}>
         {children}
       </Button>
     </Popconfirm>

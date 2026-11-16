@@ -12,7 +12,7 @@ interface BackButtonProps {
 export function BackButton({ href }: BackButtonProps) {
   return (
     <Link href={href}>
-      <Button icon={<ArrowLeftOutlined />}>Kembali</Button>
+      <Button size="large" icon={<ArrowLeftOutlined />}>Kembali</Button>
     </Link>
   );
 }

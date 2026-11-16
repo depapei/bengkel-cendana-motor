@@ -28,7 +28,7 @@ export function ExportButton({ onExport, loading }: ExportButtonProps) {
       disabled={loading}
       menu={{ items: ITEMS, onClick: ({ key }) => onExport(key as ExportFormat) }}
     >
-      <Button icon={<DownloadOutlined />} loading={loading}>
+      <Button size="large" icon={<DownloadOutlined />} loading={loading}>
         Export
       </Button>
     </Dropdown>

@@ -18,7 +18,7 @@ interface StatCardProps {
 /** Kartu angka ringkasan (dashboard & laporan). */
 export function StatCard({ title, value, money, loading, href }: StatCardProps) {
   const card = (
-    <Card size="small" hoverable={!!href} className="h-full">
+    <Card hoverable={!!href} className="h-full">
       <Statistic
         title={title}
         value={value}

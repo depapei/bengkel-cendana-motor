@@ -26,13 +26,13 @@ export function BrandQuickAdd({ onCreated }: BrandQuickAddProps) {
         control={control}
         name="name"
         className="mb-0 flex-1"
-        render={(field) => <Input {...field} placeholder="Merek (Honda)" />}
+        render={(field) => <Input size="large" {...field} placeholder="Merek (Honda)" />}
       />
       <FormField
         control={control}
         name="type"
         className="mb-0 flex-1"
-        render={(field) => <Input {...field} placeholder="Tipe (Vario 125)" />}
+        render={(field) => <Input size="large" {...field} placeholder="Tipe (Vario 125)" />}
       />
     </QuickAddRow>
   );

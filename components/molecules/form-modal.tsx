@@ -33,7 +33,8 @@ export function FormModal({ title, onSubmit, onCancel, loading, okText = "Simpan
       okText={okText}
       cancelText="Batal"
       confirmLoading={loading}
-      okButtonProps={{ htmlType: "submit", form: formId, danger: okDanger }}
+      okButtonProps={{ size: "large", htmlType: "submit", form: formId, danger: okDanger }}
+      cancelButtonProps={{ size: "large" }}
     >
       <FormContainer id={formId} onSubmit={onSubmit}>
         {children}

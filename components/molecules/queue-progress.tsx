@@ -21,7 +21,6 @@ export function QueueProgress({ order }: { order: QueueOrder }) {
   return (
     <Steps
       orientation="vertical"
-      size="small"
       current={current}
       status={cancelled ? "error" : order.status === OrderStatus.done ? "finish" : "process"}
       items={QUEUE_PROGRESS_STEPS.map((status, index) => ({

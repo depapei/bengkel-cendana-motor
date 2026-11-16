@@ -30,7 +30,7 @@ export function VehicleFields<T extends FieldValues, TOut extends FieldValues>({
         name={`${prefix}platNomor` as Path<T>}
         label="Plat nomor"
         required
-        render={(field) => <Input {...field} placeholder="B 1234 ABC" className="uppercase" />}
+        render={(field) => <Input size="large" {...field} placeholder="B 1234 ABC" className="uppercase" />}
       />
     </>
   );

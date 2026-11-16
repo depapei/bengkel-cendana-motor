@@ -44,13 +44,13 @@ function SparePartDetailView({ part }: { part: SparePart }) {
         subtitle="Detail & riwayat pergerakan stok"
         extra={
           <>
-            <Button type="primary" icon={<ImportOutlined />} onClick={() => movementModal.show(StockMovementType.in)}>
+            <Button size="large" type="primary" icon={<ImportOutlined />} onClick={() => movementModal.show(StockMovementType.in)}>
               Barang Masuk
             </Button>
-            <Button icon={<AuditOutlined />} onClick={() => movementModal.show(StockMovementType.adjust)}>
+            <Button size="large" icon={<AuditOutlined />} onClick={() => movementModal.show(StockMovementType.adjust)}>
               Stock Opname
             </Button>
-            <Button icon={<EditOutlined />} onClick={() => editModal.show()}>
+            <Button size="large" icon={<EditOutlined />} onClick={() => editModal.show()}>
               Ubah
             </Button>
             <ConfirmButton confirmTitle="Hapus sparepart ini?" onConfirm={() => remove.mutate(part.id)}>

@@ -30,7 +30,7 @@ export function SparePartManager() {
         title="Sparepart"
         subtitle="Master sparepart, harga jual, dan stok"
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
+          <Button size="large" type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
             Tambah
           </Button>
         }

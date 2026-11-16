@@ -31,7 +31,7 @@ export function MechanicQuickAdd({
         control={control}
         name="name"
         className="mb-0 flex-1"
-        render={(field) => <Input {...field} placeholder="Nama mekanik baru" />}
+        render={(field) => <Input size="large" {...field} placeholder="Nama mekanik baru" />}
       />
     </QuickAddRow>
   );

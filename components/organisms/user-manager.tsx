@@ -30,7 +30,7 @@ export function UserManager() {
         title="User"
         subtitle="Akun login admin & kasir"
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
+          <Button size="large" type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
             Tambah
           </Button>
         }

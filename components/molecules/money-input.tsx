@@ -7,6 +7,7 @@ import { numberInputFormatter, numberInputParser } from "@/utils/format";
 export function MoneyInput(props: InputNumberProps<number>) {
   return (
     <InputNumber<number>
+      size="large"
       min={0}
       prefix="Rp"
       className="w-full"

@@ -29,6 +29,7 @@ function InvoiceView({ order }: { order: OrderDetail }) {
       <div className="mb-8 flex gap-2 print:hidden">
         <BackButton href={buildUrl(AppRoute.OrderDetail, { id: order.id })} />
         <Button
+          size="large"
           className="ml-auto"
           icon={<WhatsAppOutlined />}
           href={buildWhatsAppLink(order.customer.phoneNumber, buildInvoiceMessage(order))}
@@ -36,7 +37,7 @@ function InvoiceView({ order }: { order: OrderDetail }) {
         >
           Kirim WhatsApp
         </Button>
-        <Button type="primary" icon={<PrinterOutlined />} onClick={() => window.print()}>
+        <Button size="large" type="primary" icon={<PrinterOutlined />} onClick={() => window.print()}>
           Cetak
         </Button>
       </div>
@@ -57,7 +58,6 @@ function InvoiceView({ order }: { order: OrderDetail }) {
       <Divider />
 
       <Descriptions
-        size="small"
         column={2}
         items={[
           { label: "Customer", children: order.customer.name },
@@ -76,7 +76,6 @@ function InvoiceView({ order }: { order: OrderDetail }) {
       <Table<ServiceFee>
         className="mt-6"
         rowKey="id"
-        size="small"
         pagination={false}
         dataSource={order.serviceFees}
         columns={[

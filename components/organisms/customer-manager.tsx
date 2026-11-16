@@ -32,7 +32,7 @@ export function CustomerManager() {
         title="Customer"
         subtitle="Data customer & kendaraannya"
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
+          <Button size="large" type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
             Customer Baru
           </Button>
         }

@@ -34,7 +34,7 @@ export function OrderStatusActions({ order, shortageCount }: OrderStatusActionsP
       {ORDER_STATUS_TRANSITIONS[order.status].map((target) => {
         if (target === OrderStatus.cancelled) {
           return (
-            <Button key={target} danger onClick={() => cancelModal.show()}>
+            <Button size="large" key={target} danger onClick={() => cancelModal.show()}>
               {ORDER_STATUS_ACTION_LABEL[target]}
             </Button>
           );
@@ -50,7 +50,7 @@ export function OrderStatusActions({ order, shortageCount }: OrderStatusActionsP
               disabled={!!blocker}
               onConfirm={() => change.mutate({ status: target })}
             >
-              <Button type="primary" disabled={!!blocker} loading={change.isPending}>
+              <Button size="large" type="primary" disabled={!!blocker} loading={change.isPending}>
                 {ORDER_STATUS_ACTION_LABEL[target]}
               </Button>
             </Popconfirm>

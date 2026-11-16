@@ -17,11 +17,11 @@ interface QueueCardProps {
 /** Satu order di papan antrean customer — tanpa harga. */
 export function QueueCard({ order, onClick }: QueueCardProps) {
   return (
-    <Card hoverable size="small" className="h-full" onClick={onClick}>
+    <Card hoverable className="h-full" onClick={onClick}>
       <Flex vertical gap={8}>
         <Flex justify="space-between" align="flex-start" gap={8}>
           <div>
-            <Typography.Text type="secondary" className="text-xs">
+            <Typography.Text type="secondary" className="text-base">
               No. Antrean
             </Typography.Text>
             <div className="text-3xl leading-none font-bold">{queueNumber(order.orderNo)}</div>
@@ -34,10 +34,10 @@ export function QueueCard({ order, onClick }: QueueCardProps) {
           {order.complaint}
         </Typography.Paragraph>
         <Flex justify="space-between" wrap gap={8}>
-          <Typography.Text type="secondary" className="text-xs">
+          <Typography.Text type="secondary" className="text-base">
             <UserOutlined /> {order.mechanic?.name ?? "Belum ada mekanik"}
           </Typography.Text>
-          <Typography.Text type="secondary" className="text-xs">
+          <Typography.Text type="secondary" className="text-base">
             <ClockCircleOutlined /> {formatDateTime(order.createdAt)}
           </Typography.Text>
         </Flex>

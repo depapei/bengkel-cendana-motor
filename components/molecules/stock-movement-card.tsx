@@ -14,7 +14,6 @@ import { buildUrl } from "@/utils/url";
 export function StockMovementCard({ movement }: { movement: ReportStockMovement }) {
   return (
     <Card
-      size="small"
       className="h-full"
       title={
         <Link href={buildUrl(AppRoute.SparePartDetail, { id: movement.sparePart.id })}>{movement.sparePart.name}</Link>

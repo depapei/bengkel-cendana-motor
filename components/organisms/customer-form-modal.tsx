@@ -36,13 +36,13 @@ export function CustomerFormModal({ record, withVehicle, onClose, onSaved }: Cus
       onCancel={onClose}
       loading={save.isPending}
     >
-      <FormField control={control} name="name" label="Nama" required render={(field) => <Input {...field} placeholder="Nama lengkap customer" />} />
+      <FormField control={control} name="name" label="Nama" required render={(field) => <Input size="large" {...field} placeholder="Nama lengkap customer" />} />
       <FormField
         control={control}
         name="phoneNumber"
         label="Nomor HP"
         required
-        render={(field) => <Input {...field} placeholder="0812xxxxxxxx" inputMode="tel" />}
+        render={(field) => <Input size="large" {...field} placeholder="0812xxxxxxxx" inputMode="tel" />}
       />
       {includeVehicle && (
         <>

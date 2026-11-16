@@ -43,7 +43,7 @@ function QueueDetailContent({ order }: { order: QueueOrderDetail }) {
       </Flex>
 
       <Descriptions
-        size="small"
+       
         column={{ xs: 1, sm: 2 }}
         items={[
           { label: "No. Order", children: order.orderNo },
@@ -56,15 +56,15 @@ function QueueDetailContent({ order }: { order: QueueOrderDetail }) {
       />
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card size="small" title="Status Pengerjaan">
+        <Card title="Status Pengerjaan">
           <QueueProgress order={order} />
         </Card>
-        <Card size="small" title="Rincian Pekerjaan">
+        <Card title="Rincian Pekerjaan">
           {order.serviceFees.length === 0 ? (
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Belum ada rincian pekerjaan" />
           ) : (
             <List
-              size="small"
+             
               dataSource={order.serviceFees}
               renderItem={(item) => (
                 <List.Item extra={<Typography.Text type="secondary">x{item.qty}</Typography.Text>}>
@@ -81,7 +81,7 @@ function QueueDetailContent({ order }: { order: QueueOrderDetail }) {
 
       {order.nextServiceDate && (
         <Descriptions
-          size="small"
+         
           title="Rekomendasi Servis Berikutnya"
           column={1}
           items={[

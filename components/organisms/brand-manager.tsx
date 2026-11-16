@@ -22,7 +22,7 @@ export function BrandManager() {
         title="Merek Motor"
         subtitle="Master merek & tipe kendaraan customer"
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
+          <Button size="large" type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
             Tambah
           </Button>
         }

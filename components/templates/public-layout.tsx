@@ -18,7 +18,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
       </Layout.Header>
       <Layout.Content className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-8">{children}</Layout.Content>
       <Layout.Footer className="text-center">
-        <Typography.Text type="secondary" className="text-xs">
+        <Typography.Text type="secondary" className="text-base">
           © {new Date().getFullYear()} {APP_NAME}
         </Typography.Text>
       </Layout.Footer>

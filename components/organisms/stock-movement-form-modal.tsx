@@ -37,7 +37,7 @@ export function StockMovementFormModal({ part, type, onClose }: StockMovementFor
         label={isAdjust ? "Stok fisik hasil hitung" : "Jumlah masuk"}
         extra={`Stok sistem saat ini: ${part.stock}`}
         required
-        render={(field) => <InputNumber {...field} min={isAdjust ? 0 : 1} placeholder={isAdjust ? "Jumlah stok fisik" : "Jumlah barang masuk"} className="w-full" />}
+        render={(field) => <InputNumber size="large" {...field} min={isAdjust ? 0 : 1} placeholder={isAdjust ? "Jumlah stok fisik" : "Jumlah barang masuk"} className="w-full" />}
       />
       <FormField
         control={control}
@@ -45,6 +45,7 @@ export function StockMovementFormModal({ part, type, onClose }: StockMovementFor
         label="Catatan"
         render={(field) => (
           <Input.TextArea
+            size="large"
             {...field}
             value={field.value ?? ""}
             rows={2}

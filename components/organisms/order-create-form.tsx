@@ -65,7 +65,7 @@ export function OrderCreateForm() {
             locale={{
               emptyText: q ? (
                 <Empty description="Customer tidak ditemukan — daftarkan sebagai customer baru">
-                  <Button type="primary" icon={<UserAddOutlined />} onClick={() => customerModal.show()}>
+                  <Button size="large" type="primary" icon={<UserAddOutlined />} onClick={() => customerModal.show()}>
                     Customer Baru
                   </Button>
                 </Empty>
@@ -76,7 +76,7 @@ export function OrderCreateForm() {
             renderItem={(customer) => (
               <List.Item
                 actions={[
-                  <Button key="vehicle" size="small" icon={<PlusOutlined />} onClick={() => vehicleModal.show(customer)}>
+                  <Button size="large" key="vehicle" icon={<PlusOutlined />} onClick={() => vehicleModal.show(customer)}>
                     Motor baru
                   </Button>,
                 ]}
@@ -87,6 +87,7 @@ export function OrderCreateForm() {
                     <Flex vertical gap={8}>
                       <span>{customer.phoneNumber}</span>
                       <Radio.Group
+                        size="large"
                         value={selectedCustomer?.id === customer.id ? vehicleId : undefined}
                         onChange={(event) =>
                           selectVehicle(customer, customer.vehicles.find((v) => v.id === event.target.value))
@@ -116,6 +117,7 @@ export function OrderCreateForm() {
                 required
                 render={() => (
                   <Input
+                    size="large"
                     readOnly
                     placeholder="Pilih kendaraan di atas"
                     value={
@@ -127,7 +129,7 @@ export function OrderCreateForm() {
                 )}
               />
               <OrderFields />
-              <Button type="primary" htmlType="submit" loading={create.isPending}>
+              <Button size="large" type="primary" htmlType="submit" loading={create.isPending}>
                 Buat Order (Draft)
               </Button>
             </FormContainer>

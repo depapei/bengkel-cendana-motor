@@ -15,7 +15,7 @@ interface CustomerCardProps {
 export function CustomerCard({ customer }: CustomerCardProps) {
   return (
     <Link href={buildUrl(AppRoute.CustomerDetail, { id: customer.id })} className="block h-full">
-      <Card hoverable size="small" className="h-full" title={customer.name}>
+      <Card hoverable className="h-full" title={customer.name}>
         <Flex vertical gap={8}>
           <Typography.Text type="secondary">{customer.phoneNumber}</Typography.Text>
           <Flex wrap gap={4}>

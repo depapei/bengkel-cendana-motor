@@ -34,6 +34,7 @@ interface DateRangeFilterProps {
 export function DateRangeFilter({ value, onChange }: DateRangeFilterProps) {
   return (
     <DatePicker.RangePicker
+      size="large"
       allowClear={false}
       format={DATE_FORMAT}
       presets={PRESETS}

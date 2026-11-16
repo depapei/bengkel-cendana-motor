@@ -13,7 +13,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   return (
     <AntdRegistry layer>
       <NextTopLoader color={BRAND_COLOR} showSpinner={false} />
-      <ConfigProvider theme={antdTheme} locale={idID}>
+      <ConfigProvider theme={antdTheme} locale={idID} componentSize="large">
         <App>
           <QueryClientProvider client={getQueryClient()}>{children}</QueryClientProvider>
         </App>

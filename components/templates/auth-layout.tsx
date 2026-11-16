@@ -40,7 +40,7 @@ export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
               <span className="block text-red-700">{restWords.join(" ")}</span>
             </h1>
             <p className="mt-6 text-lg font-semibold text-red-900">{APP_TAGLINE}</p>
-            <p className="mt-2 text-sm text-stone-600">{APP_DESCRIPTION}</p>
+            <p className="mt-2 text-base text-stone-600">{APP_DESCRIPTION}</p>
           </div>
         </div>
       </section>
@@ -59,7 +59,7 @@ export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
             </Typography.Paragraph>
           )}
           {children}
-          <Typography.Paragraph type="secondary" className="mt-10 mb-0 text-center text-xs">
+          <Typography.Paragraph type="secondary" className="mt-10 mb-0 text-center text-base">
             © {new Date().getFullYear()} {APP_NAME}
           </Typography.Paragraph>
         </div>

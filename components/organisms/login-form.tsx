@@ -18,15 +18,15 @@ export function LoginForm() {
         control={control}
         name="username"
         label="Username"
-        render={(field) => <Input {...field} prefix={<UserOutlined />} placeholder="Masukkan username" autoComplete="username" autoFocus />}
+        render={(field) => <Input size="large" {...field} prefix={<UserOutlined />} placeholder="Masukkan username" autoComplete="username" autoFocus />}
       />
       <FormField
         control={control}
         name="password"
         label="Password"
-        render={(field) => <Input.Password {...field} prefix={<LockOutlined />} placeholder="Masukkan password" autoComplete="current-password" />}
+        render={(field) => <Input.Password size="large" {...field} prefix={<LockOutlined />} placeholder="Masukkan password" autoComplete="current-password" />}
       />
-      <Button type="primary" htmlType="submit" size="large" block loading={login.isPending}>
+      <Button size="large" type="primary" htmlType="submit" block loading={login.isPending}>
         Masuk
       </Button>
     </FormContainer>

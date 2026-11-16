@@ -24,7 +24,7 @@ export function ServiceFeeTable({ order }: { order: OrderDetail }) {
       title="Rincian Servis"
       extra={
         editable && (
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
+          <Button size="large" type="primary" icon={<PlusOutlined />} onClick={() => modal.show()}>
             Tambah Item
           </Button>
         )

@@ -39,7 +39,7 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
         subtitle={`${customer.phoneNumber} · Customer sejak ${formatDate(customer.createdAt)}`}
         extra={
           <>
-            <Button icon={<EditOutlined />} onClick={() => customerModal.show()}>
+            <Button size="large" icon={<EditOutlined />} onClick={() => customerModal.show()}>
               Ubah
             </Button>
             <ConfirmButton
@@ -53,7 +53,7 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
       />
 
       <Space orientation="vertical" size="large" className="w-full">
-        <Card title="Kendaraan" extra={<Button icon={<PlusOutlined />} onClick={() => vehicleModal.show()}>Tambah</Button>}>
+        <Card title="Kendaraan" extra={<Button size="large" icon={<PlusOutlined />} onClick={() => vehicleModal.show()}>Tambah</Button>}>
           <DataTable<Vehicle>
             dataSource={customer.vehicles}
             pagination={false}
@@ -79,6 +79,7 @@ function CustomerDetailView({ customer }: { customer: Customer }) {
           title="Riwayat Servis"
           extra={
             <Select
+              size="large"
               allowClear
               placeholder="Semua kendaraan"
               className="min-w-48"

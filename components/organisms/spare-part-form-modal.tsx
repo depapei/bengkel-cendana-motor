@@ -29,14 +29,14 @@ export function SparePartFormModal({ record, onClose }: SparePartFormModalProps)
       onCancel={onClose}
       loading={save.isPending}
     >
-      <FormField control={control} name="name" label="Nama" required render={(field) => <Input {...field} placeholder="Contoh: Oli Mesin 1L" />} />
+      <FormField control={control} name="name" label="Nama" required render={(field) => <Input size="large" {...field} placeholder="Contoh: Oli Mesin 1L" />} />
       <FormField control={control} name="price" label="Harga jual" required render={(field) => <MoneyInput {...field} placeholder="Harga jual per unit" />} />
       <FormField
         control={control}
         name="stock"
         label="Stok awal"
         extra={record ? "Perubahan stok dilakukan lewat Barang Masuk / Stock Opname." : undefined}
-        render={(field) => <InputNumber {...field} min={0} disabled={!!record} placeholder="Stok awal" className="w-full" />}
+        render={(field) => <InputNumber size="large" {...field} min={0} disabled={!!record} placeholder="Stok awal" className="w-full" />}
       />
     </FormModal>
   );

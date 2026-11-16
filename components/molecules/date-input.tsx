@@ -16,6 +16,7 @@ interface DateInputProps extends Pick<DatePickerProps, "placeholder" | "disabled
 export function DateInput({ value, onChange, futureOnly, ...props }: DateInputProps) {
   return (
     <DatePicker
+      size="large"
       className="w-full"
       format={DATE_FORMAT}
       value={value ? dayjs(value) : null}

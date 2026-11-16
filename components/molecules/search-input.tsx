@@ -22,6 +22,7 @@ export function SearchInput({ placeholder = "Cari...", onSearch, autoFocus }: Se
 
   return (
     <Input.Search
+      size="large"
       allowClear
       autoFocus={autoFocus}
       placeholder={placeholder}

@@ -31,8 +31,8 @@ export function UserFormModal({ record, onClose }: UserFormModalProps) {
       onCancel={onClose}
       loading={save.isPending}
     >
-      <FormField control={control} name="name" label="Nama" required render={(field) => <Input {...field} placeholder="Nama lengkap" />} />
-      <FormField control={control} name="username" label="Username" required render={(field) => <Input {...field} placeholder="Username untuk login" />} />
+      <FormField control={control} name="name" label="Nama" required render={(field) => <Input size="large" {...field} placeholder="Nama lengkap" />} />
+      <FormField control={control} name="username" label="Username" required render={(field) => <Input size="large" {...field} placeholder="Username untuk login" />} />
       <FormField
         control={control}
         name="role"
@@ -46,7 +46,7 @@ export function UserFormModal({ record, onClose }: UserFormModalProps) {
         label="Password"
         required={!record}
         extra={record ? "Kosongkan jika tidak diubah" : undefined}
-        render={(field) => <Input.Password {...field} value={field.value ?? ""} placeholder={record ? "Password baru" : `Minimal ${PASSWORD_MIN} karakter`} autoComplete="new-password" />}
+        render={(field) => <Input.Password size="large" {...field} value={field.value ?? ""} placeholder={record ? "Password baru" : `Minimal ${PASSWORD_MIN} karakter`} autoComplete="new-password" />}
       />
     </FormModal>
   );

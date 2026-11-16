@@ -24,8 +24,8 @@ export function BrandFormModal({ record, onClose }: BrandFormModalProps) {
       onCancel={onClose}
       loading={save.isPending}
     >
-      <FormField control={control} name="name" label="Merek" required render={(field) => <Input {...field} placeholder="Honda" />} />
-      <FormField control={control} name="type" label="Tipe" required render={(field) => <Input {...field} placeholder="Vario 125" />} />
+      <FormField control={control} name="name" label="Merek" required render={(field) => <Input size="large" {...field} placeholder="Honda" />} />
+      <FormField control={control} name="type" label="Tipe" required render={(field) => <Input size="large" {...field} placeholder="Vario 125" />} />
     </FormModal>
   );
 }

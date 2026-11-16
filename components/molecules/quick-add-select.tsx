@@ -13,6 +13,7 @@ export function QuickAddSelect<T>({ renderQuickAdd, ...props }: QuickAddSelectPr
   const [open, setOpen] = useState(false);
   return (
     <Select<T>
+      size="large"
       open={open}
       onOpenChange={setOpen}
       popupRender={(menu) => (

@@ -31,6 +31,7 @@ export function SparePartSelect({ onChange, onSelectPart, current, ...props }: S
 
   return (
     <Select<string | null>
+      size="large"
       allowClear
       showSearch={{ filterOption: false, onSearch: setQ }}
       placeholder="Kosongkan jika jasa saja"

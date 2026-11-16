@@ -31,6 +31,7 @@ export function OrderFields() {
         required
         render={(field) => (
           <Input.TextArea
+            size="large"
             {...field}
             rows={3}
             placeholder="Contoh: rem depan bunyi, tarikan berat"
@@ -46,6 +47,7 @@ export function OrderFields() {
             required
             render={(field) => (
               <InputNumber<number>
+                size="large"
                 {...field}
                 value={field.value ?? null}
                 min={0}
@@ -98,6 +100,7 @@ export function OrderFields() {
         label="Catatan bengkel"
         render={(field) => (
           <Input.TextArea
+            size="large"
             {...field}
             value={field.value ?? ""}
             rows={2}

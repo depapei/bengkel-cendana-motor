@@ -41,7 +41,7 @@ export function CancelOrderModal({ order, onClose }: { order: OrderDetail; onClo
         name="cancelReason"
         label="Alasan pembatalan"
         required
-        render={(field) => <Input.TextArea {...field} value={field.value ?? ""} rows={3} placeholder="Contoh: customer membatalkan servis" />}
+        render={(field) => <Input.TextArea size="large" {...field} value={field.value ?? ""} rows={3} placeholder="Contoh: customer membatalkan servis" />}
       />
       {returnableItems.length > 0 && <Divider titlePlacement="start">Sparepart dikembalikan</Divider>}
       {returnableItems.map((item, index) => (
@@ -50,7 +50,7 @@ export function CancelOrderModal({ order, onClose }: { order: OrderDetail; onClo
           control={control}
           name={`returns.${index}.qty`}
           label={`${item.name} (dipakai di order: ${item.qty})`}
-          render={(field) => <InputNumber {...field} min={0} max={item.qty} placeholder="Jumlah dikembalikan" className="w-full" />}
+          render={(field) => <InputNumber size="large" {...field} min={0} max={item.qty} placeholder="Jumlah dikembalikan" className="w-full" />}
         />
       ))}
     </FormModal>

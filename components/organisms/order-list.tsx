@@ -33,7 +33,7 @@ export function OrderList() {
         subtitle="Daftar order per status"
         extra={
           <Link href={AppRoute.OrderNew}>
-            <Button type="primary" icon={<PlusOutlined />}>
+            <Button size="large" type="primary" icon={<PlusOutlined />}>
               Order Baru
             </Button>
           </Link>

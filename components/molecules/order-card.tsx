@@ -24,7 +24,6 @@ export function OrderCard({ order, hideCustomer }: OrderCardProps) {
     <Link href={buildUrl(AppRoute.OrderDetail, { id: order.id })} className="block h-full">
       <Card
         hoverable
-        size="small"
         className="h-full"
         title={order.orderNo}
         extra={<StatusTag value={order.status} meta={ORDER_STATUS_META} />}
