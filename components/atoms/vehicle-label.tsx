@@ -15,7 +15,8 @@ export function VehicleLabel({ vehicle, variant = "stacked" }: VehicleLabelProps
 
   if (variant === "tag") {
     return (
-      <Tag>
+      // Boleh turun baris supaya tidak meluber dari card sempit (grid 2 kolom mobile).
+      <Tag className="max-w-full whitespace-normal">
         {vehicle.platNomor} · {brand}
       </Tag>
     );
