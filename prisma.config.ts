@@ -8,6 +8,7 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    // Prisma CLI (migrate, studio) needs the direct connection, not the pooler.
+    url: env("DIRECT_URL"),
   },
 });

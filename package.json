@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "production": "next build && next start",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -11,6 +12,9 @@
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
+    "db:deploy:prod": "bun --env-file=.env.production run db:deploy",
+    "db:status:prod": "bun --env-file=.env.production prisma migrate status",
+    "db:seed:prod": "bun --env-file=.env.production run db:seed",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
   },
