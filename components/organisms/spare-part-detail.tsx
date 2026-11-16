@@ -12,6 +12,8 @@ import { ConfirmButton } from "@/components/molecules/confirm-button";
 import { DataTable } from "@/components/molecules/data-table";
 import { PageHeader } from "@/components/molecules/page-header";
 import { QueryState } from "@/components/molecules/query-state";
+import { TableCard } from "@/components/molecules/table-card";
+import { MESSAGE } from "@/constants/messages";
 import { AppRoute } from "@/constants/routes";
 import { STOCK_MOVEMENT_TYPE_META, StockMovementType } from "@/constants/stock-movement";
 import { useDeleteSparePart, useSparePart, useStockMovements } from "@/hooks/queries/use-spare-parts";
@@ -63,17 +65,18 @@ function SparePartDetailView({ part }: { part: SparePart }) {
       <Space orientation="vertical" size="large" className="w-full">
         <Card>
           <Descriptions
-            column={{ xs: 1, sm: 3 }}
+            column={{ xs: 1, sm: 2, lg: 4 }}
             items={[
+              { label: "Harga beli", children: <Money value={part.purchasePrice} emptyText={MESSAGE.purchasePriceMissing} /> },
               { label: "Harga jual", children: <Money value={part.price} strong /> },
               { label: "Stok tersedia", children: <StockBadge stock={part.stock} /> },
               { label: "Terakhir diubah", children: formatDateTime(part.updatedAt) },
             ]}
           />
         </Card>
-        <Card title="Riwayat Pergerakan Stok">
+        <TableCard title="Riwayat Pergerakan Stok">
           <StockMovementTable sparepartId={part.id} />
-        </Card>
+        </TableCard>
       </Space>
 
       {editModal.render(<SparePartFormModal record={part} onClose={editModal.close} />)}
