@@ -34,7 +34,10 @@ export function BrandSelect({ onChange, ...props }: Omit<SelectProps<string>, "o
   return (
     <QuickAddSelect<string>
       showSearch={{
-        filterOption: (input, option) => (option as BrandOption | undefined)?.search.includes(input.toLowerCase()) ?? false,
+        // filterOption juga dipanggil untuk opsi grup (merek) yang tidak punya `search`;
+        // grup cukup dianggap tidak cocok — AntD tetap menyaring isi grupnya satu per satu.
+        filterOption: (input, option) =>
+          !!option && "search" in option && (option as BrandOption).search.includes(input.toLowerCase()),
       }}
       placeholder="Pilih merek & tipe motor"
       loading={isLoading}
